@@ -11,10 +11,10 @@ class Review extends Model
     /** @use HasFactory<ReviewFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'company', 'rating', 'comment', 'approved'];
+    protected $fillable = ['name', 'company', 'rating', 'comment', 'media', 'approved'];
 
     protected function casts(): array
     {
-        return ['rating' => 'integer', 'approved' => 'boolean'];
+        return ['rating' => 'integer', 'media' => 'array', 'approved' => 'boolean'];
     }
 }

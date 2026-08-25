@@ -7,7 +7,18 @@
 @push('styles')
 <style>
 	.contact-page-body .contact-page { min-height: 650px; padding-top: 95px; }
-	.contact-page-body .contact-side { padding: 34px; }
+	.contact-page-body .contact-page { gap: 8%; }
+	.contact-page-body .contact-page > div:first-child { padding: 34px 0; }
+	.contact-page-body .contact-side { padding: 34px; border: 1px solid rgba(103,232,249,.42); border-radius: 12px; background: rgba(5,11,24,.88); box-shadow: 12px 12px 0 rgba(34,211,238,.16), 0 18px 40px rgba(2,11,31,.28); color: #f7f9fc; }
+	.contact-page-body .contact-side > p { color: #f7f9fc; }
+	.contact-page-body .contact-side .button { display: inline-flex; background: #087bdc; color: #fff; box-shadow: 5px 5px 0 #67e8f9; }
+	.contact-page-body .contact-side .button:hover { background: #22d3ee; color: #050b18; }
+	.contact-page-body .contact-email { color: #dbe4ef; }
+	.contact-page-body .contact-email a { color: #67e8f9; }
+	.contact-page-body .contact-detail { border-top-color: rgba(103,232,249,.26); }
+	.contact-page-body .contact-detail span { color: #67e8f9; }
+	.contact-page-body .contact-detail strong { color: #f7f9fc; }
+	@media (max-width: 800px) { .contact-page-body .contact-page { gap: 28px; } .contact-page-body .contact-side { padding: 24px; } }
 </style>
 @endpush
 

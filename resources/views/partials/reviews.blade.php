@@ -8,6 +8,18 @@
             @forelse ($reviews as $review)
                 <article class="review-card review-card-{{ $loop->index % 4 }}">
                     <div class="review-top"><span class="review-stars" aria-label="Rating {{ $review->rating }} dari 5">{{ str_repeat('★', $review->rating) }}</span><span class="review-index">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }} / {{ str_pad($reviews->count(), 2, '0', STR_PAD_LEFT) }}</span></div>
+                    @php($reviewMedia = collect($review->media ?? [])->flatten()->filter(fn ($media): bool => is_string($media))->take(3))
+                    @if ($reviewMedia->isNotEmpty())
+                        <div class="review-media">
+                            @foreach ($reviewMedia as $media)
+                                @if (in_array(pathinfo($media, PATHINFO_EXTENSION), ['mp4', 'mov', 'webm']))
+                                    <video src="{{ asset('storage/' . $media) }}" controls preload="metadata"></video>
+                                @else
+                                    <img src="{{ asset('storage/' . $media) }}" alt="Media ulasan dari {{ $review->company }}" loading="lazy">
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
                     <blockquote>“{{ $review->comment }}”</blockquote>
                     <div class="review-client"><span class="client-mark">{{ strtoupper(substr($review->company, 0, 1)) }}</span><div><strong>{{ $review->company }}</strong><small>{{ $review->name }}</small></div><form class="review-delete-form" action="{{ route('reviews.destroy', $review) }}" method="POST" data-review-delete-form><input type="hidden" name="_token" value="{{ csrf_token() }}"><input type="hidden" name="_method" value="DELETE"><input type="hidden" name="delete_code" data-delete-code><button class="review-delete" type="submit" aria-label="Hapus ulasan {{ $review->company }}" title="Hapus ulasan">×</button></form></div>
                 </article>
@@ -26,7 +38,7 @@
 </section>
 <section class="review-form-section section-shell" id="beri-ulasan">
     <div class="review-form-intro"><p class="eyebrow">Your voice matters</p><h2>Bagikan<br><em>pengalamanmu.</em></h2><p>Sudah pernah bekerja sama dengan GASS? Ceritakan pengalamanmu agar calon partner kami bisa mengenal cara kerja kami.</p></div>
-    <form class="review-form" action="{{ route('reviews.store') }}" method="POST">
+    <form class="review-form" action="{{ route('reviews.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @if (session('review_success'))<div class="review-alert review-alert-success">{{ session('review_success') }}</div>@endif
         @if ($errors->any())<div class="review-alert review-alert-error">Mohon periksa kembali data ulasanmu.</div>@endif
@@ -40,6 +52,7 @@
             </span>
         </label>
         <label>Ceritakan pengalamanmu<textarea name="comment" rows="4" placeholder="Apa yang paling kamu sukai dari kolaborasi bersama GASS?" required minlength="15" maxlength="600">{{ old('comment') }}</textarea></label>
+        <label>Foto atau video pendukung <small>(Maksimal 3 file, masing-masing 20 MB)</small><input type="file" name="media[]" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" multiple data-review-media></label>
         <button class="button button-dark" type="submit">Kirim ulasan <span>↗</span></button>
     </form>
 </section>

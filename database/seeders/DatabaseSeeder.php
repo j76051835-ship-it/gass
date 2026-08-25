@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Review;
+use App\Models\ServicePackage;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,8 +29,28 @@ class DatabaseSeeder extends Seeder
         }
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Admin GASS',
+            'email' => 'admin@gass.local',
+            'password' => 'password',
+            'is_admin' => true,
         ]);
+
+        $packages = [
+            ['slug' => 'ai-video-basic', 'name' => 'AI Video Basic', 'base_price' => 350000],
+            ['slug' => 'ai-video-standard', 'name' => 'AI Video Standard', 'base_price' => 750000],
+            ['slug' => 'ai-video-premium', 'name' => 'AI Video Premium', 'base_price' => 1500000],
+            ['slug' => 'ai-video-pro', 'name' => 'AI Video Pro', 'base_price' => 2500000],
+            ['slug' => 'foto-ai-basic', 'name' => 'Foto AI Basic', 'base_price' => 60000],
+            ['slug' => 'foto-ai-standard', 'name' => 'Foto AI Standard', 'base_price' => 120000],
+            ['slug' => 'foto-ai-premium', 'name' => 'Foto AI Premium', 'base_price' => 200000],
+            ['slug' => 'ai-video-basic-bulanan', 'name' => 'AI Video Basic Bulanan', 'base_price' => 1200000],
+            ['slug' => 'ai-video-standard-bulanan', 'name' => 'AI Video Standard Bulanan', 'base_price' => 2500000],
+            ['slug' => 'ai-video-premium-bulanan', 'name' => 'AI Video Premium Bulanan', 'base_price' => 4000000],
+            ['slug' => 'ai-video-pro-bulanan', 'name' => 'AI Video Pro Bulanan', 'base_price' => 6500000],
+        ];
+
+        foreach ($packages as $package) {
+            ServicePackage::updateOrCreate(['slug' => $package['slug']], $package);
+        }
     }
 }

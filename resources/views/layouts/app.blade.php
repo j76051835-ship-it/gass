@@ -28,9 +28,9 @@
     </div>
     <div class="announcement">GASS / Growth Acceleration Strategic Services <span>●</span> Jakarta · Indonesia</div>
     <header class="site-header">
-        <a href="{{ route('home') }}" class="brand" aria-label="GASS home"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><span>Growth Acceleration<br>Strategic Services</span></a>
+        <a href="{{ auth()->check() && auth()->user()->is_admin ? route('admin.dashboard') : route('admin.login') }}" class="brand" aria-label="{{ auth()->check() && auth()->user()->is_admin ? 'Dashboard admin' : 'Login admin' }}"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><span>Growth Acceleration<br>Strategic Services</span></a>
         <nav class="desktop-nav" aria-label="Navigasi utama">
-            <a class="nav-link {{ request()->routeIs('home') ? 'is-active' : '' }}" href="{{ route('home') }}"><small>00</small>Home</a>
+            <a class="nav-link {{ request()->routeIs('home') ? 'is-active' : '' }}" href="{{ route('home') }}"><small>00</small>Beranda</a>
             <a class="nav-link {{ request()->routeIs('about') ? 'is-active' : '' }}" href="{{ route('about') }}"><small>01</small>Tentang</a>
             <a class="nav-link {{ request()->routeIs('services') ? 'is-active' : '' }}" href="{{ route('services') }}"><small>02</small>Layanan</a>
             <a class="nav-link {{ request()->routeIs('process') ? 'is-active' : '' }}" href="{{ route('process') }}"><small>03</small>Proses</a>
@@ -43,7 +43,7 @@
                 <span>Menu</span>
             </button>
             <div class="mobile-menu-links" id="mobile-menu-links" data-mobile-menu-links>
-                <a class="nav-link {{ request()->routeIs('home') ? 'is-active' : '' }}" href="{{ route('home') }}">Home</a>
+                <a class="nav-link {{ request()->routeIs('home') ? 'is-active' : '' }}" href="{{ route('home') }}">Beranda</a>
                 <a class="nav-link {{ request()->routeIs('about') ? 'is-active' : '' }}" href="{{ route('about') }}">Tentang</a>
                 <a class="nav-link {{ request()->routeIs('services') ? 'is-active' : '' }}" href="{{ route('services') }}">Layanan</a>
                 <a class="nav-link {{ request()->routeIs('process') ? 'is-active' : '' }}" href="{{ route('process') }}">Proses</a>
