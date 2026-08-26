@@ -3,6 +3,14 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
+document.querySelectorAll("img[src], video[src]").forEach((media) => {
+    const source = media.getAttribute("src");
+    if (!source || !source.includes("/storage/")) return;
+
+    const storagePath = new URL(source, window.location.origin).pathname;
+    media.src = `${window.location.origin}${storagePath}`;
+});
+
 const adminRobot = document.querySelector("[data-admin-robot]");
 
 if (adminRobot) {
