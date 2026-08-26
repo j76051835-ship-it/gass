@@ -8,7 +8,7 @@ document.querySelectorAll("img[src], video[src]").forEach((media) => {
     if (!source || !source.includes("/storage/")) return;
 
     const storagePath = new URL(source, window.location.origin).pathname;
-    media.src = `${window.location.origin}${storagePath}`;
+    media.src = `${window.location.origin}/media/${storagePath.replace(/^\/storage\//, "")}`;
 });
 
 const adminRobot = document.querySelector("[data-admin-robot]");

@@ -7,6 +7,19 @@ use App\Models\PromoBanner;
 use App\Models\Review;
 use App\Models\ServicePackage;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+
+Route::get('/media/{path}', function (string $path) {
+    abort_if(str_contains($path, '..') || ! Storage::disk('public')->exists($path), 404);
+
+    $file = Storage::disk('public')->path($path);
+
+    return response()->file($file, [
+        'Accept-Ranges' => 'bytes',
+        'Cache-Control' => 'public, max-age=31536000',
+        'Content-Type' => mime_content_type($file) ?: 'application/octet-stream',
+    ]);
+})->where('path', '.*')->name('media');
 
 Route::get('/', function () {
     return view('home', [
