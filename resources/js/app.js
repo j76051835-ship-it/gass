@@ -1,4 +1,39 @@
 import "./bootstrap";
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+
+const adminRobot = document.querySelector("[data-admin-robot]");
+
+if (adminRobot) {
+    const robotEyes = [...adminRobot.querySelectorAll(".robot-eye")];
+    window.addEventListener("pointermove", (event) => {
+        robotEyes.forEach((eye) => {
+            const bounds = eye.getBoundingClientRect();
+            const horizontal = (event.clientX - (bounds.left + bounds.width / 2)) / (bounds.width / 2);
+            const vertical = (event.clientY - (bounds.top + bounds.height / 2)) / (bounds.height / 2);
+            eye.style.setProperty("--pupil-x", `${Math.max(-12, Math.min(12, horizontal * 12))}px`);
+            eye.style.setProperty("--pupil-y", `${Math.max(-12, Math.min(12, vertical * 12))}px`);
+        });
+    }, { passive: true });
+}
+
+const lottieMount = document.querySelector(".about-visual");
+
+if (lottieMount) {
+    lottieMount.classList.add("lottie-visual");
+    const animationMount = document.createElement("div");
+    animationMount.className = "lottie-animation-mount";
+    animationMount.setAttribute("aria-label", "Animasi profesional bekerja di depan komputer");
+    lottieMount.prepend(animationMount);
+    createRoot(animationMount).render(
+        React.createElement(DotLottieReact, {
+            src: "https://lottie.host/65303e49-f161-4757-962d-941db72373d9/6z0fPvOi90.json",
+            loop: true,
+            autoplay: true,
+        }),
+    );
+}
 
 let pointerFrame = null;
 window.addEventListener("pointermove", (event) => {
@@ -6,6 +41,8 @@ window.addEventListener("pointermove", (event) => {
     pointerFrame = window.requestAnimationFrame(() => {
         document.body.style.setProperty("--pointer-x", `${event.clientX}px`);
         document.body.style.setProperty("--pointer-y", `${event.clientY}px`);
+        document.body.style.setProperty("--sketchfab-shift-x", `${(window.innerWidth / 2 - event.clientX) * 0.018}px`);
+        document.body.style.setProperty("--sketchfab-shift-y", `${(window.innerHeight / 2 - event.clientY) * 0.018}px`);
         pointerFrame = null;
     });
 }, { passive: true });
@@ -41,13 +78,13 @@ const startContentTyping = () => {
                     node.textContent = text.slice(0, characterIndex + 1);
                     characterIndex += 1;
                     if (characterIndex >= text.length) window.clearInterval(timer);
-                }, 14);
-            }, elementIndex * 12 + nodeIndex * 30);
+                }, 5);
+            }, elementIndex * 6 + nodeIndex * 15);
         });
     });
 };
 
-window.setTimeout(startContentTyping, 350);
+window.setTimeout(startContentTyping, 120);
 
 window.addEventListener("scroll", () => {
     siteHeader?.classList.toggle("is-scrolled", window.scrollY > 24);
@@ -133,6 +170,101 @@ document.querySelectorAll("[data-review-media]").forEach((input) => {
 });
 
 const aboutVisual = document.querySelector(".about-visual");
+
+if (aboutVisual) {
+    const dashboardObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        aboutVisual.classList.add("dashboard-live");
+        window.setTimeout(() => aboutVisual.classList.add("dashboard-data-live"), 750);
+        window.setTimeout(() => aboutVisual.classList.add("campaign-success"), 2200);
+        dashboardObserver.disconnect();
+    }, { threshold: .35 });
+    dashboardObserver.observe(aboutVisual);
+}
+
+const aboutBook = document.querySelector("[data-about-book]");
+const aboutBookPages = aboutBook?.querySelector("[data-about-book-pages]");
+const aboutBookCards = aboutBookPages ? [...aboutBookPages.querySelectorAll(".about-service-card")] : [];
+
+if (aboutBook && aboutBookPages && aboutBookCards.length > 1) {
+    let currentBookPage = 0;
+    let touchStartX = 0;
+    let wheelLocked = false;
+    const pageHint = aboutBook.querySelector(".about-service-hint span:last-child");
+
+    const showBookPage = (nextPage) => {
+        const targetPage = Math.max(0, Math.min(nextPage, aboutBookCards.length - 1));
+        if (targetPage === currentBookPage) return;
+        const direction = targetPage > currentBookPage ? "next" : "prev";
+        const oldCard = aboutBookCards[currentBookPage];
+        const newCard = aboutBookCards[targetPage];
+        aboutBookPages.classList.remove("is-flipping-next", "is-flipping-prev");
+        aboutBookPages.classList.add(`is-flipping-${direction}`);
+        oldCard.classList.remove("is-active");
+        oldCard.classList.add("is-turning");
+        newCard.classList.remove("is-turning");
+        newCard.classList.add("is-active");
+        currentBookPage = targetPage;
+        if (pageHint) pageHint.textContent = `${String(currentBookPage + 1).padStart(2, "0")} / ${String(aboutBookCards.length).padStart(2, "0")}`;
+        window.setTimeout(() => {
+            oldCard.classList.remove("is-turning");
+            aboutBookPages.classList.remove("is-flipping-next", "is-flipping-prev");
+        }, 850);
+    };
+
+    aboutBookPages.classList.add("is-ready");
+    aboutBookCards[0].classList.add("is-active");
+    aboutBook.querySelector("[data-about-book-prev]")?.addEventListener("click", () => showBookPage(currentBookPage - 1));
+    aboutBook.querySelector("[data-about-book-next]")?.addEventListener("click", () => showBookPage(currentBookPage + 1));
+    const bookObserver = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        aboutBook.classList.add("is-opening");
+        bookObserver.disconnect();
+    }, { threshold: .35 });
+    bookObserver.observe(aboutBook);
+
+    aboutBook.addEventListener("wheel", (event) => {
+        if (wheelLocked || Math.abs(event.deltaY) < 12) return;
+        const nextPage = currentBookPage + (event.deltaY > 0 ? 1 : -1);
+        if (nextPage === currentBookPage) return;
+        event.preventDefault();
+        wheelLocked = true;
+        showBookPage(nextPage);
+        window.setTimeout(() => { wheelLocked = false; }, 900);
+    }, { passive: false });
+
+    aboutBook.addEventListener("touchstart", (event) => {
+        touchStartX = event.changedTouches[0].clientX;
+    }, { passive: true });
+    aboutBook.addEventListener("touchend", (event) => {
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(distance) < 45) return;
+        showBookPage(currentBookPage + (distance < 0 ? 1 : -1));
+    }, { passive: true });
+
+    aboutBookPages.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse") return;
+        aboutBookPages.setPointerCapture(event.pointerId);
+        touchStartX = event.clientX;
+    });
+    aboutBookPages.addEventListener("pointerup", (event) => {
+        if (event.pointerType === "mouse") return;
+        const distance = event.clientX - touchStartX;
+        if (Math.abs(distance) >= 45) showBookPage(currentBookPage + (distance < 0 ? 1 : -1));
+    });
+
+    if (window.matchMedia("(hover: hover)").matches && !reducedMotion.matches) {
+        aboutBook.addEventListener("pointermove", (event) => {
+            const bounds = aboutBook.getBoundingClientRect();
+            const rotateX = ((event.clientY - bounds.top) / bounds.height - .5) * -2.5;
+            const rotateY = ((event.clientX - bounds.left) / bounds.width - .5) * 4;
+            aboutBookPages.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        aboutBook.addEventListener("pointerleave", () => {
+            aboutBookPages.style.transform = "rotateX(0deg) rotateY(0deg)";
+        });
+    }
+}
 
 if (aboutVisual && window.matchMedia("(hover: hover)").matches) {
     aboutVisual.addEventListener("pointermove", (event) => {

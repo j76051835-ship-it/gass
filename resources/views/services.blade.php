@@ -7,6 +7,8 @@
 @push('styles')
 <style>
 	.services-page-body .services-page { padding: 34px 24px 28px; border: 1px solid rgba(103, 232, 249, .24); border-radius: 14px; background: rgba(5, 11, 24, .72); box-shadow: 0 18px 45px rgba(2, 11, 31, .2), inset 0 1px 0 rgba(255,255,255,.08); }
+	.services-page-body .services-page.scroll-reveal { transition-duration: .35s; transition-delay: 0s; }
+	@media (max-width: 800px) { .services-page-body .services-page.scroll-reveal { opacity: 1; transform: none; transition: none; } }
 	.services-page-body .process-light { margin-top: 55px; }
 	.services-page-body .page-hero { padding-bottom: 54px; }
 	.package-intro { max-width: 1240px; margin: 0 auto 28px; padding: 0 32px; text-align: center; }

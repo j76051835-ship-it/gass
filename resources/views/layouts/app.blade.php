@@ -18,6 +18,14 @@
     <div class="shape-grid-background" aria-hidden="true">
         <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
     </div>
+    <div class="global-robot" data-admin-robot aria-hidden="true">
+        <span class="robot-antenna"></span>
+        <div class="robot-head">
+            <div class="robot-eyes"><span class="robot-eye"></span><span class="robot-eye"></span></div>
+        </div>
+        <span class="robot-neck"></span>
+        <div class="robot-body"><img class="robot-logo" src="{{ asset('LOGO GASS BULAT.png') }}" alt=""><span class="robot-label">GASS unit / 01</span></div>
+    </div>
     <div class="site-loader" data-site-loader aria-hidden="true">
         <div class="loader-orbit loader-orbit-one"></div>
         <div class="loader-orbit loader-orbit-two"></div>
