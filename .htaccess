@@ -1,10 +1,13 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    RewriteBase /
+
+    DirectoryIndex index.php
 
     RewriteRule ^build/(.*)$ public/build/$1 [L]
     RewriteRule ^(.*\.(?:css|js|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|map))$ public/$1 [L]
 
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ public/index.php [L]
+    RewriteRule ^ index.php [L]
 </IfModule>
