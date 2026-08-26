@@ -143,7 +143,14 @@ document.addEventListener('DOMContentLoaded', function () {
             volumeButton.textContent = media.muted ? '🔇' : '🔊';
             volumeButton.setAttribute('aria-label', media.muted ? 'Aktifkan suara video' : 'Matikan suara video');
         };
-        playButton.addEventListener('click', function () { media.paused ? media.play() : media.pause(); });
+        playButton.addEventListener('click', function () {
+            if (media.paused) {
+                media.dataset.userPlay = 'true';
+                media.play();
+            } else {
+                media.pause();
+            }
+        });
         volumeButton.addEventListener('click', function () { media.muted = !media.muted; updateVolumeButton(); });
         media.addEventListener('play', updatePlayButton);
         media.addEventListener('pause', updatePlayButton);
@@ -155,6 +162,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('.promo-banner-media').forEach(function (media) {
         if (media.tagName.toLowerCase() === 'video') {
+            media.removeAttribute('autoplay');
+            media.pause();
+            media.currentTime = 0;
             media.muted = true;
             setupVideoControls(media);
         }
@@ -181,22 +191,53 @@ document.addEventListener('DOMContentLoaded', function () {
         if (slides.length < 2) return;
         let current = 0;
         let timer;
+        let isVideoPlaying = false;
 
         const showSlide = function (index) {
             current = (index + slides.length) % slides.length;
-            slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === current));
+            slides.forEach((slide, slideIndex) => {
+                const isActive = slideIndex === current;
+                slide.classList.toggle('is-active', isActive);
+                const video = slide.querySelector('video');
+                if (!video) return;
+                if (!isActive) {
+                    video.pause();
+                    video.currentTime = 0;
+                    return;
+                }
+                video.play().catch(() => {});
+            });
             dots.forEach((dot, dotIndex) => {
                 const isActive = dotIndex === current;
                 dot.classList.toggle('is-active', isActive);
                 dot.setAttribute('aria-pressed', String(isActive));
             });
         };
-        const start = function () { timer = window.setInterval(() => showSlide(current + 1), 5000); };
+        const start = function () {
+            if (isVideoPlaying || timer) return;
+            timer = window.setInterval(() => showSlide(current + 1), 5000);
+        };
+        const stop = function () { window.clearInterval(timer); timer = null; };
         const restart = function () { window.clearInterval(timer); start(); };
 
+        slides.forEach((slide) => {
+            const video = slide.querySelector('video');
+            if (!video) return;
+            video.addEventListener('play', () => {
+                isVideoPlaying = true;
+                stop();
+            });
+            video.addEventListener('pause', () => {
+                if (video.ended) return;
+                isVideoPlaying = false;
+                start();
+            });
+        });
+
         dots.forEach((dot, index) => dot.addEventListener('click', () => { showSlide(index); restart(); }));
-        slider.addEventListener('mouseenter', () => window.clearInterval(timer));
+        slider.addEventListener('mouseenter', stop);
         slider.addEventListener('mouseleave', start);
+        showSlide(0);
         start();
     });
 
