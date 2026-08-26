@@ -28,9 +28,8 @@ class DatabaseSeeder extends Seeder
             Review::updateOrCreate(['company' => $review['company']], $review);
         }
 
-        User::factory()->create([
+        User::updateOrCreate(['email' => 'admin@gass.local'], [
             'name' => 'Admin GASS',
-            'email' => 'admin@gass.local',
             'password' => 'password',
             'is_admin' => true,
         ]);
