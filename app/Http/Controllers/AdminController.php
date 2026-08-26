@@ -67,6 +67,10 @@ class AdminController extends Controller
 
     public function storeGalleryItem(Request $request): RedirectResponse
     {
+        if ($this->hasInvalidUpload($request->file('media', []))) {
+            return back()->withErrors(['media' => 'Media gagal diterima server. Periksa ukuran file dan konfigurasi upload PHP.']);
+        }
+
         $validated = $this->validateGalleryRequest($request, true);
 
         GalleryItem::create([
@@ -81,6 +85,10 @@ class AdminController extends Controller
 
     public function updateGalleryItem(Request $request, GalleryItem $galleryItem): RedirectResponse
     {
+        if ($this->hasInvalidUpload($request->file('media', []))) {
+            return back()->withErrors(['media' => 'Media gagal diterima server. Periksa ukuran file dan konfigurasi upload PHP.']);
+        }
+
         $validated = $this->validateGalleryRequest($request, false);
         $updates = [
             'title' => $validated['title'],
@@ -133,8 +141,19 @@ class AdminController extends Controller
         Storage::disk('public')->delete(array_column($media, 'path'));
     }
 
+    private function hasInvalidUpload(array|UploadedFile $media): bool
+    {
+        $files = is_array($media) ? $media : [$media];
+
+        return collect($files)->contains(fn (UploadedFile $file): bool => ! $file->isValid());
+    }
+
     public function storeBanner(Request $request): RedirectResponse
     {
+        if ($request->hasFile('media') && ! $request->file('media')->isValid()) {
+            return back()->withErrors(['media' => 'Video gagal diterima server. Periksa ukuran file dan konfigurasi upload PHP.']);
+        }
+
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:120'],
             'media' => ['required', 'file'],
@@ -156,6 +175,10 @@ class AdminController extends Controller
 
     public function updateBanner(Request $request, PromoBanner $banner): RedirectResponse
     {
+        if ($request->hasFile('media') && ! $request->file('media')->isValid()) {
+            return back()->withErrors(['media' => 'Video gagal diterima server. Periksa ukuran file dan konfigurasi upload PHP.']);
+        }
+
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:120'],
             'media' => ['nullable', 'file'],

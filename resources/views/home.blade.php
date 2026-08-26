@@ -25,7 +25,7 @@
     .home-page .promo-banner-overlay h2 { max-width: 600px; margin: 0; color: #fff; font-size: clamp(24px, 4vw, 48px); line-height: 1; }
     .home-page .promo-banner-volume { display: block; margin-top: 10px; padding: 7px 10px; border: 1px solid rgba(255,255,255,.72); border-radius: 3px; background: rgba(5,11,24,.72); color: #fff; font: 10px var(--mono); cursor: pointer; pointer-events: auto; }
     .home-page .promo-banner-volume:hover, .home-page .promo-banner-volume:focus-visible { background: #fff; color: #050b18; outline: 2px solid #f7c934; outline-offset: 2px; }
-    .home-video-controls { display: flex; gap: 6px; position: absolute; z-index: 5; right: 12px; bottom: 12px; }
+    .home-video-controls { display: flex; gap: 6px; position: absolute; z-index: 5; left: 12px; bottom: 12px; }
     .home-video-control { width: 34px; height: 30px; border: 1px solid rgba(103,232,249,.85); border-radius: 3px; background: rgba(5,11,24,.86); color: #67e8f9; font: 14px var(--mono); cursor: pointer; }
     .home-video-control:hover, .home-video-control:focus-visible { background: #f7c934; color: #050b18; outline: 0; }
     .home-page .hero-art.has-promo-banner > :not(.promo-banner-slider):not(.promo-banner-dots):not(.promo-banner-media):not(.promo-banner-overlay) { display: none; }
