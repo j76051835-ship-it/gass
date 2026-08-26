@@ -211,6 +211,10 @@ document.querySelectorAll("[data-banner-media]").forEach((input) => {
     const currentMedia = preview.querySelector("img, video");
     if (currentMedia) {
         currentMedia.addEventListener(currentMedia.tagName === "VIDEO" ? "loadedmetadata" : "load", () => syncPreviewRatio(currentMedia), { once: true });
+        currentMedia.addEventListener("error", () => {
+            currentMedia.hidden = true;
+            preview.insertAdjacentHTML("beforeend", '<span class="admin-media-error">Video tidak dapat diputar. Gunakan MP4 H.264 atau WebM.</span>');
+        }, { once: true });
         syncPreviewRatio(currentMedia);
     }
 
@@ -234,6 +238,10 @@ document.querySelectorAll("[data-banner-media]").forEach((input) => {
             media.playsInline = true;
         }
         media.addEventListener(media.tagName === "VIDEO" ? "loadedmetadata" : "load", () => syncPreviewRatio(media), { once: true });
+        media.addEventListener("error", () => {
+            media.hidden = true;
+            preview.insertAdjacentHTML("beforeend", '<span class="admin-media-error">Video tidak dapat diputar. Gunakan MP4 H.264 atau WebM.</span>');
+        }, { once: true });
         media.addEventListener("load", () => URL.revokeObjectURL(media.src), { once: true });
         media.addEventListener("loadeddata", () => URL.revokeObjectURL(media.src), { once: true });
         preview.append(media);
