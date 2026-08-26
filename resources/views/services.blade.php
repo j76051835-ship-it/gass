@@ -27,9 +27,10 @@
 	.package-content { display: grid; grid-template-columns: 1fr 2.25fr; gap: 18px; }
 	.package-features h3 { margin: 2px 0 14px; font-size: 12px; text-transform: uppercase; }
 	.package-features ul { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-	.package-features li { display: flex; gap: 8px; font-size: 11px; line-height: 1.25; }
+	.package-features h3 { color: #061b45; }
+	.package-features li { display: flex; gap: 8px; color: #1f3557; font-size: 11px; line-height: 1.25; }
 	.package-features li:before { content: "✓"; color: var(--package-color); font-weight: 700; }
-	.package-features small { display: block; margin-top: 3px; color: #61708d; font-size: 9px; }
+	.package-features small { display: block; margin-top: 3px; color: #334d73; font-size: 9px; }
 	.package-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
 	.video .package-options { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 	.package-option { display: flex; min-width: 0; flex-direction: column; padding: 14px 10px 10px; border: 1px solid rgba(6, 27, 69, .12); border-radius: 6px; background: #fff; }
