@@ -164,7 +164,7 @@ class AdminController extends Controller
         $type = $this->bannerMediaType($media);
 
         $banner = PromoBanner::create([
-            'title' => $validated['title'] ?? null,
+            'title' => $validated['title'] ?? '',
             'media_path' => $path,
             'media_type' => $type,
             'is_active' => $request->boolean('is_active'),
@@ -184,7 +184,7 @@ class AdminController extends Controller
             'media' => ['nullable', 'file'],
         ]);
 
-        $updates = ['title' => $validated['title'] ?? null, 'is_active' => $request->boolean('is_active')];
+        $updates = ['title' => $validated['title'] ?? '', 'is_active' => $request->boolean('is_active')];
         if ($request->hasFile('media')) {
             Storage::disk('public')->delete($banner->media_path);
             $media = $request->file('media');

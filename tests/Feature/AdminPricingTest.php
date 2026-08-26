@@ -113,7 +113,7 @@ it('allows an admin to upload an untitled video promo banner', function () {
         ->assertSessionHas('status');
 
     $banner = PromoBanner::firstOrFail();
-    expect($banner->title)->toBeNull()
+    expect($banner->title)->toBe('')
         ->and($banner->media_type)->toBe('video');
 
     $this->get(route('home'))
