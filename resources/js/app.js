@@ -199,6 +199,7 @@ document.querySelectorAll("[data-review-media]").forEach((input) => {
 });
 
 document.querySelectorAll("[data-banner-media]").forEach((input) => {
+    input.setAttribute("accept", "image/*,video/*");
     const preview = input.closest("form")?.closest(".admin-banner-create, .admin-banner-item")?.querySelector("[data-banner-preview]");
     if (!preview) return;
 
@@ -247,6 +248,8 @@ document.querySelectorAll("[data-banner-media]").forEach((input) => {
         preview.append(media);
     });
 });
+
+document.querySelectorAll("[data-gallery-input]").forEach((input) => input.setAttribute("accept", "image/*,video/*"));
 
 const aboutVisual = document.querySelector(".about-visual");
 

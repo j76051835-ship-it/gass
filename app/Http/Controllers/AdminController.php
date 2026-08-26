@@ -112,7 +112,7 @@ class AdminController extends Controller
             'title' => ['required', 'string', 'max:120'],
             'description' => ['nullable', 'string', 'max:500'],
             'media' => [$mediaRequired ? 'required' : 'nullable', 'array', 'min:1'],
-            'media.*' => ['file', 'mimes:jpg,jpeg,png,webp,gif,mp4,mov,webm'],
+            'media.*' => ['file'],
         ]);
 
         return $validated;
@@ -137,7 +137,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:120'],
-            'media' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm'],
+            'media' => ['required', 'file'],
         ]);
 
         $media = $request->file('media');
@@ -158,7 +158,7 @@ class AdminController extends Controller
     {
         $validated = $request->validate([
             'title' => ['nullable', 'string', 'max:120'],
-            'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm'],
+            'media' => ['nullable', 'file'],
         ]);
 
         $updates = ['title' => $validated['title'] ?? null, 'is_active' => $request->boolean('is_active')];

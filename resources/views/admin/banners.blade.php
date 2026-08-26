@@ -46,7 +46,7 @@
     <form class="admin-banner-create" method="POST" action="{{ route('admin.banners.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="admin-banner-preview" data-banner-preview><span class="admin-empty">Preview media baru</span></div>
-        <div class="admin-banner-form"><label class="admin-title-field">Judul banner (opsional)<input type="text" name="title" placeholder="Promo Agustus GASS"></label><label>Media foto / video<input type="file" name="media" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" data-banner-media required></label><label class="admin-banner-check"><input type="checkbox" name="is_active" value="1" checked> Tampilkan di beranda</label><button type="submit">Tambah banner</button></div>
+        <div class="admin-banner-form"><label class="admin-title-field">Judul banner (opsional)<input type="text" name="title" placeholder="Promo Agustus GASS"></label><label>Media foto / video<input type="file" name="media" accept="image/*,video/*" data-banner-media required></label><label class="admin-banner-check"><input type="checkbox" name="is_active" value="1" checked> Tampilkan di beranda</label><button type="submit">Tambah banner</button></div>
     </form>
     <div class="admin-banner-list">
         @forelse ($banners as $banner)
