@@ -99,3 +99,24 @@ it('allows an admin to upload and display an active promo banner', function () {
         ->assertSee('Promo Foto September')
         ->assertSee('promo-banner-dot', false);
 });
+
+it('allows an admin to upload an untitled video promo banner', function () {
+    Storage::fake('public');
+    $admin = User::factory()->create(['is_admin' => true]);
+
+    $this->actingAs($admin)
+        ->post(route('admin.banners.store'), [
+            'media' => UploadedFile::fake()->create('promo.webm', 100, 'video/webm'),
+            'is_active' => 1,
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status');
+
+    $banner = PromoBanner::firstOrFail();
+    expect($banner->title)->toBeNull()
+        ->and($banner->media_type)->toBe('video');
+
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('<video class="promo-banner-media"', false);
+});

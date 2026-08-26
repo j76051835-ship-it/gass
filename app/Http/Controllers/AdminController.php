@@ -7,9 +7,9 @@ use App\Models\PromoBanner;
 use App\Models\ServicePackage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -115,12 +115,6 @@ class AdminController extends Controller
             'media.*' => ['file', 'mimes:jpg,jpeg,png,webp,gif,mp4,mov,webm'],
         ]);
 
-        foreach ($request->file('media', []) as $media) {
-            if (str_starts_with($media->getMimeType(), 'video/') && $media->getSize() > 500 * 1024 * 1024) {
-                throw ValidationException::withMessages(['media' => 'Ukuran setiap video maksimal 500 MB.']);
-            }
-        }
-
         return $validated;
     }
 
@@ -142,16 +136,16 @@ class AdminController extends Controller
     public function storeBanner(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:120'],
-            'media' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm', 'max:51200'],
+            'title' => ['nullable', 'string', 'max:120'],
+            'media' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm'],
         ]);
 
         $media = $request->file('media');
         $path = $media->store('promo-banners', 'public');
-        $type = str_starts_with($media->getMimeType(), 'video/') ? 'video' : 'image';
+        $type = $this->bannerMediaType($media);
 
         $banner = PromoBanner::create([
-            'title' => $validated['title'],
+            'title' => $validated['title'] ?? null,
             'media_path' => $path,
             'media_type' => $type,
             'is_active' => $request->boolean('is_active'),
@@ -163,21 +157,28 @@ class AdminController extends Controller
     public function updateBanner(Request $request, PromoBanner $banner): RedirectResponse
     {
         $validated = $request->validate([
-            'title' => ['required', 'string', 'max:120'],
-            'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm', 'max:51200'],
+            'title' => ['nullable', 'string', 'max:120'],
+            'media' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,mp4,mov,webm'],
         ]);
 
-        $updates = ['title' => $validated['title'], 'is_active' => $request->boolean('is_active')];
+        $updates = ['title' => $validated['title'] ?? null, 'is_active' => $request->boolean('is_active')];
         if ($request->hasFile('media')) {
             Storage::disk('public')->delete($banner->media_path);
             $media = $request->file('media');
             $updates['media_path'] = $media->store('promo-banners', 'public');
-            $updates['media_type'] = str_starts_with($media->getMimeType(), 'video/') ? 'video' : 'image';
+            $updates['media_type'] = $this->bannerMediaType($media);
         }
 
         $banner->update($updates);
 
         return back()->with('status', 'Banner promo berhasil diperbarui.');
+    }
+
+    private function bannerMediaType(UploadedFile $media): string
+    {
+        return str_starts_with($media->getMimeType(), 'video/') || in_array(strtolower($media->getClientOriginalExtension()), ['mp4', 'mov', 'webm'], true)
+            ? 'video'
+            : 'image';
     }
 
     public function destroyBanner(PromoBanner $banner): RedirectResponse
