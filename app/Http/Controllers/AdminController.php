@@ -123,7 +123,7 @@ class AdminController extends Controller
         return array_map(function ($file): array {
             return [
                 'path' => $file->store('gallery', 'public'),
-                'type' => str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image',
+                'type' => str_starts_with($file->getMimeType(), 'video/') || in_array(strtolower($file->getClientOriginalExtension()), ['mp4', 'mov', 'webm'], true) ? 'video' : 'image',
             ];
         }, $files);
     }

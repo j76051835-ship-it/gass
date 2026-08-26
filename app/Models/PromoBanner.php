@@ -19,4 +19,11 @@ class PromoBanner extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function getMediaTypeAttribute(?string $value): string
+    {
+        $extension = strtolower(pathinfo($this->attributes['media_path'] ?? '', PATHINFO_EXTENSION));
+
+        return $value === 'video' || in_array($extension, ['mp4', 'mov', 'webm'], true) ? 'video' : 'image';
+    }
 }
