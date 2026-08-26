@@ -29,6 +29,7 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::view('/formulir-pemesanan', 'order-form')->name('order.form');
 Route::view('/tentang-kami', 'about')->name('about');
 Route::get('/layanan', function () {
     return view('services', ['packages' => ServicePackage::where('is_active', true)->get()]);

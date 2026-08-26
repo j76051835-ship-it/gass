@@ -69,5 +69,6 @@
     <main id="top">@yield('content')</main>
 
     <footer class="site-footer section-shell"><div class="footer-brand"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><div><strong>PT. GASS DIGITAL SOLUTIONS</strong><small>Growth Acceleration Strategic Services</small></div></div><div class="footer-copyright">© {{ date('Y') }} GASS. Built to move.</div><div class="social-links"><a href="https://www.instagram.com/gass.generations/" target="_blank" rel="noreferrer">Instagram ↗</a><a href="https://www.tiktok.com/@gass.generations" target="_blank" rel="noreferrer">TikTok ↗</a><a href="mailto:gassdigitalsoultions@gmail.com">Email ↗</a></div><a href="#top">Kembali ke atas ↑</a></footer>
+    @stack('scripts')
 </body>
 </html>
