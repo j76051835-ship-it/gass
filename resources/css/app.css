@@ -1114,25 +1114,28 @@ body:after {
     position: fixed;
     z-index: 0;
     left: 50%;
-    top: 52%;
+    top: 58%;
     width: 245px;
     height: 360px;
     opacity: .22;
     filter: drop-shadow(14px 16px 0 rgba(247, 201, 52, .85));
     transform: translate(-50%, -50%) scale(1.15);
     transform-origin: center;
+    perspective: 700px;
+    transform-style: preserve-3d;
     pointer-events: none;
 }
 .global-robot::before { content: ''; position: absolute; width: 152px; height: 32px; top: 0; left: 47px; border: 4px solid #f4f7fb; border-bottom: 0; border-radius: 80px 80px 0 0; }
-.robot-antenna { position: absolute; width: 4px; height: 32px; top: -29px; left: 121px; background: #f4f7fb; }
+.robot-antenna { position: absolute; z-index: 3; width: 4px; height: 32px; top: -29px; left: 121px; background: linear-gradient(90deg, #9ab5cd, #f4f7fb 45%, #7999b6); transform: rotateZ(var(--antenna-tilt, 0deg)) translateZ(8px); transform-origin: bottom center; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
 .robot-antenna::after { content: ''; position: absolute; width: 13px; height: 13px; top: -8px; left: -5px; border-radius: 50%; background: #ff784f; box-shadow: 0 0 0 5px rgba(255, 120, 79, .18); }
-.robot-head { position: absolute; z-index: 2; inset: 26px 20px auto; height: 142px; border: 5px solid #f4f7fb; border-radius: 30px 30px 43px 43px; background: #15558c; box-shadow: inset 0 -16px 0 rgba(7, 26, 50, .25); }
+.robot-head { position: absolute; z-index: 2; inset: 26px 20px auto; height: 142px; border: 5px solid #f4f7fb; border-radius: 30px 30px 43px 43px; background: linear-gradient(145deg, #3b86ba 0%, #15558c 48%, #0a315b 100%); box-shadow: inset 10px 10px 0 rgba(255,255,255,.08), inset -14px -18px 0 rgba(7,26,50,.28), 12px 18px 0 rgba(7,26,50,.18); transform: translateZ(20px) rotateX(var(--head-tilt-x, 0deg)) rotateY(var(--head-tilt-y, 0deg)); transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.robot-head::before { content: ''; position: absolute; inset: 10px 14px auto; height: 17px; border-radius: 50%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent); transform: translateZ(8px) rotate(-4deg); pointer-events: none; }
 .robot-head::after { content: ''; position: absolute; width: 36px; height: 5px; left: 50%; bottom: 20px; transform: translateX(-50%); background: #f7c934; }
 .robot-eyes { display: flex; justify-content: space-between; margin: 36px 28px 0; }
 .robot-eye { position: relative; width: 54px; height: 54px; border: 4px solid #f4f7fb; border-radius: 50%; background: #071a32; overflow: hidden; }
-.robot-eye::after { content: ''; position: absolute; width: 17px; height: 17px; top: 15px; left: 15px; border-radius: 50%; background: #f7c934; transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px)); transition: transform .12s ease-out; }
-.robot-neck { position: absolute; top: 167px; left: 91px; width: 63px; height: 25px; border: 4px solid #f4f7fb; border-bottom: 0; background: #15558c; }
-.robot-body { position: absolute; top: 187px; left: 33px; width: 179px; height: 152px; border: 5px solid #f4f7fb; border-radius: 35px 35px 22px 22px; background: #15558c; }
+.robot-eye::after { content: ''; position: absolute; width: 17px; height: 17px; top: 15px; left: 15px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff5b0 0 12%, #f7c934 25% 70%, #cf8b00 100%); box-shadow: 0 0 12px rgba(247,201,52,.8); transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px)) translateZ(4px); transition: transform .12s ease-out; }
+.robot-neck { position: absolute; top: 167px; left: 91px; width: 63px; height: 25px; border: 4px solid #f4f7fb; border-bottom: 0; background: linear-gradient(90deg, #0a315b, #3b86ba, #0a315b); transform: translateZ(7px); }
+.robot-body { position: absolute; top: 187px; left: 33px; width: 179px; height: 152px; border: 5px solid #f4f7fb; border-radius: 35px 35px 22px 22px; background: linear-gradient(145deg, #347fb5 0%, #15558c 52%, #092f58 100%); box-shadow: inset 10px 10px 0 rgba(255,255,255,.07), inset -12px -16px 0 rgba(7,26,50,.25), 14px 18px 0 rgba(7,26,50,.16); transform: translateZ(4px); }
 .robot-body::before, .robot-body::after { content: ''; position: absolute; top: 33px; width: 24px; height: 75px; border: 4px solid #f4f7fb; background: #15558c; }
 .robot-body::before { left: -40px; border-radius: 20px 0 0 20px; transform: rotate(10deg); }
 .robot-body::after { right: -40px; border-radius: 0 20px 20px 0; transform: rotate(-10deg); }
@@ -1140,10 +1143,10 @@ body:after {
 .robot-label { position: absolute; left: 50%; bottom: -40px; transform: translateX(-50%); color: #f4f7fb; font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 .announcement, .site-header, main, .site-footer { position: relative; z-index: 1; }
 @media (max-width: 800px) {
-    .global-robot { top: 55%; transform: translate(-50%, -50%) scale(.9); opacity: .16; }
+    .global-robot { top: 61%; transform: translate(-50%, -50%) scale(.9); opacity: .16; }
 }
 @media (prefers-reduced-motion: reduce) {
-    .robot-eye::after { transition: none; }
+    .robot-eye::after, .robot-head, .robot-antenna { transition: none; }
 }
 .site-header {
     background: rgba(6, 27, 69, 0.78);

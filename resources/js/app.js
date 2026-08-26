@@ -7,7 +7,14 @@ const adminRobot = document.querySelector("[data-admin-robot]");
 
 if (adminRobot) {
     const robotEyes = [...adminRobot.querySelectorAll(".robot-eye")];
+    const robotHead = adminRobot.querySelector(".robot-head");
+    const robotAntenna = adminRobot.querySelector(".robot-antenna");
     window.addEventListener("pointermove", (event) => {
+        const horizontal = (event.clientX / window.innerWidth - 0.5) * 2;
+        const vertical = (event.clientY / window.innerHeight - 0.5) * 2;
+        adminRobot.style.setProperty("--head-tilt-y", `${Math.max(-9, Math.min(9, horizontal * 9))}deg`);
+        adminRobot.style.setProperty("--head-tilt-x", `${Math.max(-7, Math.min(7, vertical * -7))}deg`);
+        robotAntenna?.style.setProperty("--antenna-tilt", `${Math.max(-5, Math.min(5, horizontal * 5))}deg`);
         robotEyes.forEach((eye) => {
             const bounds = eye.getBoundingClientRect();
             const horizontal = (event.clientX - (bounds.left + bounds.width / 2)) / (bounds.width / 2);
@@ -16,6 +23,10 @@ if (adminRobot) {
             eye.style.setProperty("--pupil-y", `${Math.max(-12, Math.min(12, vertical * 12))}px`);
         });
     }, { passive: true });
+
+    if (robotHead) {
+        robotHead.addEventListener("transitionend", () => robotHead.style.willChange = "auto");
+    }
 }
 
 const lottieMount = document.querySelector(".about-visual");
@@ -184,6 +195,48 @@ document.querySelectorAll("[data-review-media]").forEach((input) => {
         if (!hasInvalidFile) return;
         window.alert(files.length > 3 ? "Maksimal 3 file yang dapat diupload." : "Ukuran setiap file maksimal 20 MB.");
         input.value = "";
+    });
+});
+
+document.querySelectorAll("[data-banner-media]").forEach((input) => {
+    const preview = input.closest("form")?.closest(".admin-banner-create, .admin-banner-item")?.querySelector("[data-banner-preview]");
+    if (!preview) return;
+
+    const syncPreviewRatio = (media) => {
+        const width = media.naturalWidth || media.videoWidth;
+        const height = media.naturalHeight || media.videoHeight;
+        if (width && height) preview.style.setProperty("--banner-aspect-ratio", `${width} / ${height}`);
+    };
+
+    const currentMedia = preview.querySelector("img, video");
+    if (currentMedia) {
+        currentMedia.addEventListener(currentMedia.tagName === "VIDEO" ? "loadedmetadata" : "load", () => syncPreviewRatio(currentMedia), { once: true });
+        syncPreviewRatio(currentMedia);
+    }
+
+    input.addEventListener("change", () => {
+        const [file] = input.files;
+        preview.replaceChildren();
+        if (!file) {
+            const emptyState = document.createElement("span");
+            emptyState.className = "admin-empty";
+            emptyState.textContent = "Preview media baru";
+            preview.append(emptyState);
+            return;
+        }
+
+        const media = document.createElement(file.type.startsWith("video/") ? "video" : "img");
+        media.src = URL.createObjectURL(file);
+        media.alt = file.name;
+        if (media.tagName === "VIDEO") {
+            media.muted = true;
+            media.controls = true;
+            media.playsInline = true;
+        }
+        media.addEventListener(media.tagName === "VIDEO" ? "loadedmetadata" : "load", () => syncPreviewRatio(media), { once: true });
+        media.addEventListener("load", () => URL.revokeObjectURL(media.src), { once: true });
+        media.addEventListener("loadeddata", () => URL.revokeObjectURL(media.src), { once: true });
+        preview.append(media);
     });
 });
 
