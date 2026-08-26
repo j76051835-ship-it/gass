@@ -7,8 +7,8 @@
     <title>@yield('title', 'GASS — Growth Acceleration Strategic Services')</title>
     @if (app()->environment('production') && file_exists(public_path('build/manifest.json')))
         @php($viteManifest = json_decode(file_get_contents(public_path('build/manifest.json')), true))
-        <link rel="stylesheet" href="{{ asset('public/build/'.$viteManifest['resources/css/app.css']['file']) }}">
-        <script type="module" src="{{ asset('public/build/'.$viteManifest['resources/js/app.js']['file']) }}"></script>
+        <link rel="stylesheet" href="{{ asset('build/'.$viteManifest['resources/css/app.css']['file']) }}">
+        <script type="module" src="{{ asset('build/'.$viteManifest['resources/js/app.js']['file']) }}"></script>
     @else
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
