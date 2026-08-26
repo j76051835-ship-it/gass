@@ -31,6 +31,7 @@
     <nav class="admin-nav" aria-label="Menu admin">
         <a class="admin-nav-card" href="{{ route('admin.prices') }}"><div><small>01 / PRODUK</small><h2>Kontrol harga</h2><p>Atur harga dasar dan persentase diskon seluruh paket layanan.</p></div><strong>Kelola harga →</strong></a>
         <a class="admin-nav-card" href="{{ route('admin.banners') }}"><div><small>02 / PROMO</small><h2>Kontrol banner</h2><p>Tambah, ubah, aktifkan, atau hapus banner foto dan video di beranda.</p></div><strong>Kelola banner →</strong></a>
+        <a class="admin-nav-card" href="{{ route('admin.gallery') }}"><div><small>03 / PORTOFOLIO</small><h2>Galeri karya</h2><p>Kelola foto, video, dan carousel karya yang tampil di beranda.</p></div><strong>Kelola galeri →</strong></a>
     </nav>
 </section>
 @endsection

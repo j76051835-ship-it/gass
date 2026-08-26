@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalleryItem;
 use App\Models\PromoBanner;
 use App\Models\ServicePackage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -44,6 +46,7 @@ class AdminController extends Controller
         return view('admin.dashboard', [
             'packages' => ServicePackage::query()->orderBy('id')->get(),
             'banners' => PromoBanner::query()->latest()->get(),
+            'galleryItems' => GalleryItem::query()->latest()->get(),
         ]);
     }
 
@@ -55,6 +58,85 @@ class AdminController extends Controller
     public function banners(): View
     {
         return view('admin.banners', ['banners' => PromoBanner::query()->latest()->get()]);
+    }
+
+    public function gallery(): View
+    {
+        return view('admin.gallery', ['galleryItems' => GalleryItem::query()->latest()->get()]);
+    }
+
+    public function storeGalleryItem(Request $request): RedirectResponse
+    {
+        $validated = $this->validateGalleryRequest($request, true);
+
+        GalleryItem::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'media' => $this->storeGalleryMedia($request->file('media')),
+            'is_active' => $request->boolean('is_active'),
+        ]);
+
+        return back()->with('status', 'Karya galeri berhasil ditambahkan.');
+    }
+
+    public function updateGalleryItem(Request $request, GalleryItem $galleryItem): RedirectResponse
+    {
+        $validated = $this->validateGalleryRequest($request, false);
+        $updates = [
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'is_active' => $request->boolean('is_active'),
+        ];
+
+        if ($request->hasFile('media')) {
+            $this->deleteGalleryMedia($galleryItem->media);
+            $updates['media'] = $this->storeGalleryMedia($request->file('media'));
+        }
+
+        $galleryItem->update($updates);
+
+        return back()->with('status', 'Karya galeri berhasil diperbarui.');
+    }
+
+    public function destroyGalleryItem(GalleryItem $galleryItem): RedirectResponse
+    {
+        $this->deleteGalleryMedia($galleryItem->media);
+        $galleryItem->delete();
+
+        return back()->with('status', 'Karya galeri berhasil dihapus.');
+    }
+
+    private function validateGalleryRequest(Request $request, bool $mediaRequired): array
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:120'],
+            'description' => ['nullable', 'string', 'max:500'],
+            'media' => [$mediaRequired ? 'required' : 'nullable', 'array', 'min:1'],
+            'media.*' => ['file', 'mimes:jpg,jpeg,png,webp,gif,mp4,mov,webm'],
+        ]);
+
+        foreach ($request->file('media', []) as $media) {
+            if (str_starts_with($media->getMimeType(), 'video/') && $media->getSize() > 500 * 1024 * 1024) {
+                throw ValidationException::withMessages(['media' => 'Ukuran setiap video maksimal 500 MB.']);
+            }
+        }
+
+        return $validated;
+    }
+
+    private function storeGalleryMedia(array $files): array
+    {
+        return array_map(function ($file): array {
+            return [
+                'path' => $file->store('gallery', 'public'),
+                'type' => str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'image',
+            ];
+        }, $files);
+    }
+
+    private function deleteGalleryMedia(array $media): void
+    {
+        Storage::disk('public')->delete(array_column($media, 'path'));
     }
 
     public function storeBanner(Request $request): RedirectResponse

@@ -35,6 +35,24 @@ if (lottieMount) {
     );
 }
 
+const processLottieSources = {
+    find: "https://lottie.host/76c0e433-0c43-4355-8ead-f9e63b0f1b01/FNdRHUyOg1.lottie",
+    design: "https://lottie.host/96bb606f-eb33-41b5-b351-3511f4844157/urGBLMgwaj.lottie",
+    launch: "https://lottie.host/1ca0da70-cfeb-4ea1-a6e5-45139d40097f/pxlC316qJ5.lottie",
+};
+
+document.querySelectorAll("[data-process-lottie]").forEach((processLottieMount) => {
+    const source = processLottieSources[processLottieMount.dataset.processLottie];
+    if (!source) return;
+    createRoot(processLottieMount).render(
+        React.createElement(DotLottieReact, {
+            src: source,
+            loop: true,
+            autoplay: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+        }),
+    );
+});
+
 let pointerFrame = null;
 window.addEventListener("pointermove", (event) => {
     if (pointerFrame) return;
