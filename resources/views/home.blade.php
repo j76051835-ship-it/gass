@@ -14,7 +14,7 @@
     }
     .home-page .hero-art.has-promo-banner { background: #050b18; }
     .home-page .hero-art.has-promo-banner { border: 1px solid rgba(103,232,249,.9); border-radius: 8px; box-shadow: 18px 18px 0 rgba(2, 11, 31, .38), 0 0 0 6px rgba(5, 11, 24, .16), 0 0 34px rgba(34,211,238,.26); }
-    .home-page .promo-banner-slider { position: absolute; inset: 8px; z-index: 1; overflow: hidden; border: 1px solid rgba(255,255,255,.58); border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(5,11,24,.42), inset 0 0 28px rgba(5,11,24,.3); }
+    .home-page .promo-banner-slider { position: absolute; inset: 8px; z-index: 1; overflow: hidden; border: 1px solid rgba(255,255,255,.58); border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(5,11,24,.42), inset 0 0 28px rgba(5,11,24,.3); touch-action: pan-y; }
     .home-page .promo-banner-slider:before, .home-page .promo-banner-slider:after { content: ""; position: absolute; z-index: 3; pointer-events: none; }
     .home-page .promo-banner-slider:before { inset: 10px; border: 1px solid rgba(103,232,249,.36); border-radius: 2px; }
     .home-page .promo-banner-slider:after { top: 0; right: 12%; left: 12%; height: 1px; background: #67e8f9; box-shadow: 0 0 12px 2px rgba(103,232,249,.72); opacity: .32; animation: promo-scan 4.5s ease-in-out infinite; }
@@ -28,13 +28,16 @@
     .home-video-controls { display: flex; gap: 6px; position: absolute; z-index: 5; left: 12px; bottom: 12px; }
     .home-video-control { width: 34px; height: 30px; border: 1px solid rgba(103,232,249,.85); border-radius: 3px; background: rgba(5,11,24,.86); color: #67e8f9; font: 14px var(--mono); cursor: pointer; }
     .home-video-control:hover, .home-video-control:focus-visible { background: #f7c934; color: #050b18; outline: 0; }
-    .home-page .hero-art.has-promo-banner > :not(.promo-banner-slider):not(.promo-banner-dots):not(.promo-banner-media):not(.promo-banner-overlay) { display: none; }
+    .home-page .hero-art.has-promo-banner > :not(.promo-banner-slider):not(.promo-banner-dots):not(.promo-banner-arrows):not(.promo-banner-media):not(.promo-banner-overlay) { display: none; }
     .home-page .promo-banner-dots { display: flex; position: absolute; z-index: 5; right: 28px; bottom: 24px; gap: 9px; padding: 9px 11px; border: 1px solid rgba(103,232,249,.55); border-radius: 20px; background: rgba(5,11,24,.62); box-shadow: 0 0 18px rgba(34,211,238,.2); backdrop-filter: blur(8px); }
     .home-page .promo-banner-dot { width: 10px; height: 10px; padding: 0; border: 1px solid #fff; border-radius: 50%; background: transparent; cursor: pointer; transition: transform .2s ease, background .2s ease; }
     .home-page .promo-banner-dot:hover, .home-page .promo-banner-dot:focus-visible { transform: scale(1.35); background: #fff; outline: 2px solid #f7c934; outline-offset: 3px; }
     .home-page .promo-banner-dot.is-active { background: #fff; box-shadow: 0 0 0 3px rgba(255,255,255,.22); }
+    .home-page .promo-banner-arrows { display: none; }
+    .home-page .promo-banner-arrow { width: 30px; height: 42px; border: 1px solid rgba(103,232,249,.8); border-radius: 3px; background: rgba(5,11,24,.78); color: #67e8f9; font: 20px var(--mono); line-height: 1; cursor: pointer; }
+    .home-page .promo-banner-arrow:focus-visible, .home-page .promo-banner-arrow:hover { background: #f7c934; color: #050b18; outline: 2px solid #fff; outline-offset: 2px; }
     @keyframes promo-scan { 0%, 100% { transform: translateY(0); opacity: .12; } 50% { transform: translateY(500px); opacity: .5; } }
-    @media (max-width: 600px) { .home-page .promo-banner-dots { right: 18px; bottom: 18px; } }
+    @media (max-width: 600px) { .home-page .promo-banner-dots { right: 18px; bottom: 18px; } .home-page .promo-banner-arrows { display: flex; position: absolute; z-index: 5; top: 50%; right: 12px; left: 12px; justify-content: space-between; transform: translateY(-50%); pointer-events: none; } .home-page .promo-banner-arrow { pointer-events: auto; } }
     .home-page .hero-art:before {
         content: "";
         position: absolute;
@@ -77,6 +80,11 @@
     .home-gallery-copy:after { content: "↗"; position: absolute; top: 18px; right: 20px; color: #f7c934; font: 18px var(--mono); }
     .home-gallery-copy h3 { margin: 0 28px 8px 0; color: #f7f9fc; font-size: 23px; }
     .home-gallery-copy p { margin: 0; color: #9bb4ca; font-size: 13px; line-height: 1.5; }
+    .home-gallery-card:not(:last-child)::after { display: none; }
+    @media (max-width: 700px) {
+        .home-gallery-card:not(:last-child)::after { content: "→\\A GESER"; display: block; position: absolute; z-index: 3; top: 50%; right: 7px; padding: 8px 5px; border: 1px solid rgba(103,232,249,.78); background: rgba(5,11,24,.84); color: #67e8f9; font: 8px/1.3 var(--mono); letter-spacing: .08em; text-align: center; white-space: pre; transform: translateY(-50%); pointer-events: none; animation: gallery-swipe-hint 1.8s ease-in-out infinite; }
+    }
+    @keyframes gallery-swipe-hint { 0%, 100% { opacity: .58; transform: translate(0, -50%); } 50% { opacity: 1; transform: translate(4px, -50%); } }
     @media (max-width: 700px) { .home-gallery { padding-top: 80px; padding-bottom: 85px; } .home-gallery-heading { display: block; } .home-gallery-heading p:last-child { margin-top: 22px; } .home-gallery-card { flex-basis: min(86vw, 350px); } }
     .home-page .sun {
         z-index: 1;
@@ -189,6 +197,20 @@ document.addEventListener('DOMContentLoaded', function () {
             dots = [dot];
         }
         if (slides.length < 2) return;
+        const arrows = document.createElement('div');
+        arrows.className = 'promo-banner-arrows';
+        const previousButton = document.createElement('button');
+        previousButton.className = 'promo-banner-arrow';
+        previousButton.type = 'button';
+        previousButton.textContent = '←';
+        previousButton.setAttribute('aria-label', 'Banner sebelumnya');
+        const nextButton = document.createElement('button');
+        nextButton.className = 'promo-banner-arrow';
+        nextButton.type = 'button';
+        nextButton.textContent = '→';
+        nextButton.setAttribute('aria-label', 'Banner berikutnya');
+        arrows.append(previousButton, nextButton);
+        heroArt.append(arrows);
         let current = 0;
         let timer;
         let isVideoPlaying = false;
@@ -235,6 +257,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         dots.forEach((dot, index) => dot.addEventListener('click', () => { showSlide(index); restart(); }));
+        previousButton.addEventListener('click', () => { showSlide(current - 1); restart(); });
+        nextButton.addEventListener('click', () => { showSlide(current + 1); restart(); });
+        let pointerStart = null;
+        slider.addEventListener('pointerdown', (event) => {
+            if (event.target.closest('button, video')) return;
+            pointerStart = { x: event.clientX, y: event.clientY };
+        });
+        slider.addEventListener('pointerup', (event) => {
+            if (!pointerStart) return;
+            const deltaX = event.clientX - pointerStart.x;
+            const deltaY = event.clientY - pointerStart.y;
+            pointerStart = null;
+            if (Math.abs(deltaX) < 45 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+            showSlide(current + (deltaX < 0 ? 1 : -1));
+            restart();
+        });
+        slider.addEventListener('pointercancel', () => { pointerStart = null; });
         slider.addEventListener('mouseenter', stop);
         slider.addEventListener('mouseleave', start);
         showSlide(0);

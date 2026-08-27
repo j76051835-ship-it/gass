@@ -615,6 +615,18 @@ h2 em {
         grid-template-columns: 30px 125px minmax(0, 1fr);
         gap: 14px !important;
     }
+    .process-step-find {
+        grid-template-columns: 30px minmax(0, 1fr);
+    }
+    .process-step-find .process-lottie-mount {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
+    }
+    .process-step-find > div:last-child {
+        grid-column: 2;
+        grid-row: 2;
+    }
     .contact {
         display: block;
         padding-top: 85px;
