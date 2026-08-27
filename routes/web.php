@@ -47,6 +47,7 @@ Route::post('/admin/login', [AdminController::class, 'authenticate'])->name('adm
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/harga', [AdminController::class, 'prices'])->name('prices');
+    Route::patch('/harga', [AdminController::class, 'updatePackages'])->name('packages.bulk-update');
     Route::get('/banner', [AdminController::class, 'banners'])->name('banners');
     Route::get('/galeri', [AdminController::class, 'gallery'])->name('gallery');
     Route::patch('/paket/{package}', [AdminController::class, 'updatePackage'])->name('packages.update');

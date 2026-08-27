@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -52,7 +53,39 @@ class AdminController extends Controller
 
     public function prices(): View
     {
-        return view('admin.prices', ['packages' => ServicePackage::query()->orderBy('id')->get()]);
+        $packageSlugs = [
+            'pembuatan-website-basic',
+            'pembuatan-website-standar',
+            'pembuatan-website-pro',
+            'pembuatan-social-media-basic',
+            'pembuatan-social-media-standar',
+            'pembuatan-social-media-pro',
+            'video-ai-standard-satuan',
+            'video-ai-premium-satuan',
+            'video-ai-professional',
+            'carousel-standard',
+            'carousel-premium',
+            'carousel-pro',
+            'maintenance-website-basic',
+            'maintenance-website-standard',
+            'maintenance-website-professional',
+            'maintenance-website-advanced',
+            'maintenance-website-premium',
+            'maintenance-social-media',
+            'video-ai-standard-bulanan',
+            'video-ai-premium-bulanan',
+            'video-ai-professional-bulanan',
+            'carousel-standard-bulanan',
+            'carousel-premium-bulanan',
+            'carousel-pro-bulanan',
+        ];
+        $packages = ServicePackage::query()->whereIn('slug', $packageSlugs)->orderBy('id')->get();
+        $monthlySlugs = collect($packageSlugs)->filter(fn (string $slug): bool => str_contains($slug, 'bulanan') || str_starts_with($slug, 'maintenance-'))->values();
+
+        return view('admin.prices', [
+            'singlePackages' => $packages->whereNotIn('slug', $monthlySlugs),
+            'monthlyPackages' => $packages->whereIn('slug', $monthlySlugs),
+        ]);
     }
 
     public function banners(): View
@@ -222,6 +255,27 @@ class AdminController extends Controller
         $package->update($validated);
 
         return back()->with('status', "Harga {$package->name} berhasil diperbarui.");
+    }
+
+    public function updatePackages(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'packages' => ['required', 'array'],
+            'packages.*.id' => ['required', 'integer', 'exists:service_packages,id'],
+            'packages.*.base_price' => ['required', 'integer', 'min:0', 'max:4294967295'],
+            'packages.*.discount_percent' => ['required', 'integer', 'min:0', 'max:100'],
+        ]);
+
+        DB::transaction(function () use ($validated): void {
+            foreach ($validated['packages'] as $packageData) {
+                ServicePackage::whereKey($packageData['id'])->update([
+                    'base_price' => $packageData['base_price'],
+                    'discount_percent' => $packageData['discount_percent'],
+                ]);
+            }
+        });
+
+        return back()->with('status', 'Semua harga dan diskon berhasil diperbarui.');
     }
 
     public function logout(Request $request): RedirectResponse

@@ -57,6 +57,62 @@ it('allows an admin to update a package price and discount', function () {
         ->and($package->fresh()->final_price)->toBe(170000);
 });
 
+it('allows an admin to save all package prices and discounts at once', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    $firstPackage = ServicePackage::create([
+        'slug' => 'bulk-first-package',
+        'name' => 'Bulk First Package',
+        'base_price' => 100000,
+    ]);
+    $secondPackage = ServicePackage::create([
+        'slug' => 'bulk-second-package',
+        'name' => 'Bulk Second Package',
+        'base_price' => 200000,
+    ]);
+
+    $this->actingAs($admin)
+        ->patch(route('admin.packages.bulk-update'), [
+            'packages' => [
+                ['id' => $firstPackage->id, 'base_price' => 150000, 'discount_percent' => 5],
+                ['id' => $secondPackage->id, 'base_price' => 300000, 'discount_percent' => 10],
+            ],
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status', 'Semua harga dan diskon berhasil diperbarui.');
+
+    expect($firstPackage->fresh()->base_price)->toBe(150000)
+        ->and($firstPackage->fresh()->discount_percent)->toBe(5)
+        ->and($secondPackage->fresh()->base_price)->toBe(300000)
+        ->and($secondPackage->fresh()->discount_percent)->toBe(10);
+});
+
+it('only shows packages available on the services page in price control', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+    ServicePackage::create([
+        'slug' => 'ai-video-basic',
+        'name' => 'AI Video Basic',
+        'base_price' => 350000,
+    ]);
+    $this->actingAs($admin)
+        ->get(route('admin.prices'))
+        ->assertOk()
+        ->assertSee('Carousel Standard')
+        ->assertDontSee('AI Video Basic');
+});
+
+it('shows each website maintenance tier with its own price control', function () {
+    $admin = User::factory()->create(['is_admin' => true]);
+
+    $this->actingAs($admin)
+        ->get(route('admin.prices'))
+        ->assertOk()
+        ->assertSee('Maintenance Website Basic')
+        ->assertSee('Maintenance Website Standard')
+        ->assertSee('Maintenance Website Professional')
+        ->assertSee('Maintenance Website Advanced')
+        ->assertSee('Maintenance Website Premium');
+});
+
 it('does not allow regular users into the admin dashboard', function () {
     $this->actingAs(User::factory()->create())
         ->get(route('admin.dashboard'))

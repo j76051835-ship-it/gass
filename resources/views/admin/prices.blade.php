@@ -15,6 +15,9 @@
 .admin-link:hover, .admin-logout:hover { background: #f7c934; }
 .admin-intro { margin: 0 0 22px; color: #b9c9dc; font-size: 14px; }
 .admin-package-list { display: grid; gap: 10px; }
+.admin-package-group { display: grid; gap: 10px; margin-bottom: 28px; }
+.admin-package-group h2 { margin: 0 0 2px; color: #fff; font-size: 20px; }
+.admin-package-group > p { margin: 0 0 4px; color: #b9c9dc; font-size: 12px; }
 .admin-package { display: grid; grid-template-columns: 1.4fr 1fr 1fr auto; align-items: end; gap: 16px; padding: 18px; border: 1px solid #b8c4d3; background: #fffdf8; }
 .admin-package h2 { margin: 0 0 5px; color: #071a32; font-size: 17px; }
 .admin-package small { color: #52647a; font: 10px var(--mono); }
@@ -23,6 +26,8 @@
 .admin-package input:focus { outline: 3px solid #f7c934; outline-offset: 1px; }
 .admin-package button { padding: 12px 15px; border: 0; background: #071a32; color: #fff; font: 11px var(--mono); cursor: pointer; white-space: nowrap; }
 .admin-status { margin-bottom: 20px; padding: 13px 16px; background: #d9f8e2; color: #166534; font-size: 13px; }
+.admin-save-all { width: 100%; margin-top: 4px; padding: 15px; border: 0; background: #f7c934; color: #071a32; font: 700 12px var(--mono); cursor: pointer; }
+.admin-save-all:hover { background: #fff; }
 @media (max-width: 760px) { .admin-workspace { padding: 35px 20px 65px; } .admin-topbar { align-items: start; flex-direction: column; } .admin-actions { flex-wrap: wrap; } .admin-package { grid-template-columns: 1fr 1fr; } .admin-package > div { grid-column: 1 / -1; } .admin-package button { grid-column: 1 / -1; } }
 </style>
 @endpush
@@ -32,10 +37,16 @@
     <div class="admin-topbar"><div><p class="eyebrow">GASS / Produk</p><h1>Kontrol harga.</h1></div><div class="admin-actions"><a class="admin-link" href="{{ route('admin.dashboard') }}">Workspace</a><form method="POST" action="{{ route('admin.logout') }}">@csrf<button class="admin-logout" type="submit">Keluar ↗</button></form></div></div>
     <p class="admin-intro">Perubahan di sini langsung diterapkan ke pilihan layanan dan harga pemesanan di halaman layanan.</p>
     @if (session('status'))<div class="admin-status">{{ session('status') }}</div>@endif
-    <div class="admin-package-list">
-        @foreach ($packages as $package)
-            <form class="admin-package" method="POST" action="{{ route('admin.packages.update', $package) }}">@csrf @method('PATCH')<div><h2>{{ $package->name }}</h2><small>{{ $package->slug }}</small></div><label>Harga dasar<input type="number" name="base_price" min="0" value="{{ old('base_price', $package->base_price) }}" required></label><label>Diskon (%)<input type="number" name="discount_percent" min="0" max="100" value="{{ old('discount_percent', $package->discount_percent) }}" required></label><button type="submit">Simpan</button></form>
+    <form method="POST" action="{{ route('admin.packages.bulk-update') }}">@csrf @method('PATCH')
+    <div class="admin-package-group"><h2>Paket Satuan</h2><p>Harga untuk satu kali pengerjaan atau satu item.</p><div class="admin-package-list">
+        @foreach ($singlePackages as $package)
+            <div class="admin-package"><div><h2>{{ $package->name }}</h2><small>{{ $package->slug }}</small></div><input type="hidden" name="packages[{{ $package->id }}][id]" value="{{ $package->id }}"><label>Harga dasar<input type="number" name="packages[{{ $package->id }}][base_price]" min="0" value="{{ old("packages.{$package->id}.base_price", $package->base_price) }}" required></label><label>Diskon (%)<input type="number" name="packages[{{ $package->id }}][discount_percent]" min="0" max="100" value="{{ old("packages.{$package->id}.discount_percent", $package->discount_percent) }}" required></label></div>
         @endforeach
-    </div>
+    </div></div>
+    <div class="admin-package-group"><h2>Paket Bulanan</h2><p>Harga untuk layanan dengan periode 30 hari atau per bulan.</p><div class="admin-package-list">
+        @foreach ($monthlyPackages as $package)
+            <div class="admin-package"><div><h2>{{ $package->name }}</h2><small>{{ $package->slug }}</small></div><input type="hidden" name="packages[{{ $package->id }}][id]" value="{{ $package->id }}"><label>Harga dasar<input type="number" name="packages[{{ $package->id }}][base_price]" min="0" value="{{ old("packages.{$package->id}.base_price", $package->base_price) }}" required></label><label>Diskon (%)<input type="number" name="packages[{{ $package->id }}][discount_percent]" min="0" max="100" value="{{ old("packages.{$package->id}.discount_percent", $package->discount_percent) }}" required></label></div>
+        @endforeach
+    </div></div><button class="admin-save-all" type="submit">Simpan Semua Perubahan</button></form>
 </section>
 @endsection
