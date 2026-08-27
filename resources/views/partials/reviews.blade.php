@@ -10,14 +10,25 @@
                     <div class="review-top"><span class="review-stars" aria-label="Rating {{ $review->rating }} dari 5">{{ str_repeat('★', $review->rating) }}</span><span class="review-index">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }} / {{ str_pad($reviews->count(), 2, '0', STR_PAD_LEFT) }}</span></div>
                     @php($reviewMedia = collect($review->media ?? [])->flatten()->filter(fn ($media): bool => is_string($media))->take(3))
                     @if ($reviewMedia->isNotEmpty())
-                        <div class="review-media">
-                            @foreach ($reviewMedia as $media)
-                                @if (in_array(pathinfo($media, PATHINFO_EXTENSION), ['mp4', 'mov', 'webm']))
-                                    <video src="{{ asset('storage/' . $media) }}" controls preload="metadata"></video>
-                                @else
-                                    <img src="{{ asset('storage/' . $media) }}" alt="Media ulasan dari {{ $review->company }}" loading="lazy">
-                                @endif
-                            @endforeach
+                        <div class="review-media-carousel" data-review-media-carousel>
+                            <div class="review-media" data-review-media-track>
+                                @foreach ($reviewMedia as $mediaIndex => $media)
+                                    <div class="review-media-slide {{ $mediaIndex === 0 ? 'is-active' : '' }}" data-review-media-slide>
+                                        @if (in_array(pathinfo($media, PATHINFO_EXTENSION), ['mp4', 'mov', 'webm']))
+                                            <video src="{{ asset('storage/' . $media) }}" controls preload="metadata"></video>
+                                        @else
+                                            <img src="{{ asset('storage/' . $media) }}" alt="Media ulasan dari {{ $review->company }}" loading="lazy">
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                            @if ($reviewMedia->count() > 1)
+                                <div class="review-media-controls">
+                                    <button type="button" data-review-media-prev aria-label="Media sebelumnya">←</button>
+                                    <span data-review-media-status>01 / {{ str_pad($reviewMedia->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                                    <button type="button" data-review-media-next aria-label="Media berikutnya">→</button>
+                                </div>
+                            @endif
                         </div>
                     @endif
                     <blockquote>“{{ $review->comment }}”</blockquote>
@@ -46,13 +57,13 @@
         <label>Nama perusahaan<input type="text" name="company" value="{{ old('company') }}" placeholder="Contoh: Nama perusahaan" required maxlength="150"></label>
         <label>Rating
             <span class="rating-input" role="radiogroup" aria-label="Pilih rating">
-                @for ($rating = 5; $rating >= 1; $rating--)
+                @for ($rating = 1; $rating <= 5; $rating++)
                     <input id="rating-{{ $rating }}" type="radio" name="rating" value="{{ $rating }}" @checked(old('rating', 5) == $rating) required><label for="rating-{{ $rating }}">★</label>
                 @endfor
             </span>
         </label>
         <label>Ceritakan pengalamanmu<textarea name="comment" rows="4" placeholder="Apa yang paling kamu sukai dari kolaborasi bersama GASS?" required minlength="15" maxlength="600">{{ old('comment') }}</textarea></label>
-        <label>Foto atau video pendukung <small>(Maksimal 3 file, masing-masing 20 MB)</small><input type="file" name="media[]" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" multiple data-review-media></label>
+        <label>Foto atau video pendukung <small>(Maksimal 3 file, masing-masing 20 MB)</small><input type="file" name="media[]" accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm" multiple data-review-media><span class="review-upload-preview" data-review-preview aria-live="polite"></span></label>
         <button class="button button-dark" type="submit">Kirim ulasan <span>↗</span></button>
     </form>
 </section>

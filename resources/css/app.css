@@ -1747,7 +1747,7 @@ p {
     gap: 12px;
 }
 .review-card {
-    min-height: 340px;
+    min-height: 390px;
     padding: 22px;
     background: #0b76d1;
     color: #fff;
@@ -1789,19 +1789,59 @@ p {
 .review-card-red .review-stars {
     color: var(--ink);
 }
+.review-media-carousel {
+    position: relative;
+    margin: 18px 0 22px;
+    overflow: hidden;
+}
 .review-media {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 8px;
-    margin: 18px 0;
+}
+.review-media-slide {
+    display: none;
+}
+.review-media-slide.is-active {
+    display: block;
 }
 .review-media img,
 .review-media video {
     width: 100%;
-    aspect-ratio: 1;
+    height: 230px;
     border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 4px;
-    object-fit: cover;
+    object-fit: contain;
+    background: rgba(5, 11, 24, 0.48);
+}
+.review-media-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    font: 10px var(--mono);
+}
+.review-media-controls button {
+    width: 26px;
+    height: 24px;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    line-height: 1;
+}
+.review-upload-preview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+}
+.review-upload-preview img,
+.review-upload-preview video {
+    width: 100%;
+    height: 150px;
+    border: 1px solid rgba(6, 27, 69, 0.22);
+    border-radius: 3px;
+    background: #071a32;
+    object-fit: contain;
 }
 .review-index {
     font: 10px var(--mono);
@@ -1879,7 +1919,7 @@ p {
         grid-template-columns: 1fr 1fr;
     }
     .review-card {
-        min-height: 315px;
+        min-height: 375px;
         padding: 17px;
     }
     .review-card blockquote {
@@ -1891,7 +1931,7 @@ p {
         grid-template-columns: 1fr;
     }
     .review-card {
-        min-height: 275px;
+        min-height: 350px;
     }
 }
 .manifesto-stamp {
@@ -3197,7 +3237,8 @@ p {
 }
 .rating-input label:hover,
 .rating-input label:has(~ input:checked),
-.rating-input input:checked + label {
+.rating-input input:checked + label,
+.rating-input label.is-selected {
     color: var(--yellow);
     transform: scale(1.1);
 }
@@ -4003,7 +4044,8 @@ button, .button {
 }
 .review-form .rating-input label:hover,
 .review-form .rating-input label:has(~ input:checked),
-.review-form .rating-input input:checked + label {
+.review-form .rating-input input:checked + label,
+.review-form .rating-input label.is-selected {
     color: #ffad42;
     opacity: 1;
     text-shadow: 0 0 10px rgba(255, 173, 66, 0.75);

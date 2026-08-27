@@ -196,14 +196,70 @@ document.querySelectorAll("[data-review-delete-form]").forEach((form) => {
 });
 
 document.querySelectorAll("[data-review-media]").forEach((input) => {
+    const preview = input.closest("label")?.querySelector("[data-review-preview]");
+
     input.addEventListener("change", () => {
         const files = [...input.files];
         const maxFileSize = 20 * 1024 * 1024;
         const hasInvalidFile = files.length > 3 || files.some((file) => file.size > maxFileSize);
-        if (!hasInvalidFile) return;
-        window.alert(files.length > 3 ? "Maksimal 3 file yang dapat diupload." : "Ukuran setiap file maksimal 20 MB.");
-        input.value = "";
+        if (hasInvalidFile) {
+            window.alert(files.length > 3 ? "Maksimal 3 file yang dapat diupload." : "Ukuran setiap file maksimal 20 MB.");
+            input.value = "";
+            if (preview) preview.replaceChildren();
+            return;
+        }
+
+        if (!preview) return;
+        preview.replaceChildren(...files.map((file) => {
+            const media = document.createElement(file.type.startsWith("video/") ? "video" : "img");
+            media.src = URL.createObjectURL(file);
+            media.alt = file.name;
+            if (media.tagName === "VIDEO") {
+                media.muted = true;
+                media.controls = true;
+                media.playsInline = true;
+            }
+            media.addEventListener("load", () => URL.revokeObjectURL(media.src), { once: true });
+            media.addEventListener("loadeddata", () => URL.revokeObjectURL(media.src), { once: true });
+            return media;
+        }));
     });
+});
+
+document.querySelectorAll("[data-review-media-carousel]").forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll("[data-review-media-slide]")];
+    if (slides.length < 2) return;
+    let currentIndex = 0;
+    let timer;
+
+    const showSlide = (nextIndex) => {
+        currentIndex = (nextIndex + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => slide.classList.toggle("is-active", slideIndex === currentIndex));
+        const status = carousel.querySelector("[data-review-media-status]");
+        if (status) status.textContent = `${String(currentIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+    };
+    const startTimer = () => {
+        window.clearInterval(timer);
+        if (!reducedMotion.matches) timer = window.setInterval(() => showSlide(currentIndex + 1), 4000);
+    };
+
+    carousel.querySelector("[data-review-media-prev]")?.addEventListener("click", () => { showSlide(currentIndex - 1); startTimer(); });
+    carousel.querySelector("[data-review-media-next]")?.addEventListener("click", () => { showSlide(currentIndex + 1); startTimer(); });
+    carousel.addEventListener("pointerenter", () => window.clearInterval(timer));
+    carousel.addEventListener("pointerleave", startTimer);
+    startTimer();
+});
+
+document.querySelectorAll(".rating-input").forEach((ratingInput) => {
+    const syncRating = () => {
+        const selectedRating = Number(ratingInput.querySelector("input:checked")?.value || 0);
+        ratingInput.querySelectorAll("label").forEach((label) => {
+            label.classList.toggle("is-selected", Number(label.htmlFor.replace("rating-", "")) <= selectedRating);
+        });
+    };
+
+    ratingInput.addEventListener("change", syncRating);
+    syncRating();
 });
 
 document.querySelectorAll("[data-banner-media]").forEach((input) => {
