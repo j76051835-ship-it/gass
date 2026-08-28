@@ -15,6 +15,23 @@
 	.package-intro h2 { margin: 0 0 8px; color: #f7f9fc; font-size: clamp(30px, 4vw, 48px); line-height: .95; letter-spacing: -.06em; }
 	.package-intro p { margin: 0; color: #b9c9dc; font-size: 13px; }
 	.package-intro:after { content: ""; display: block; width: 70px; height: 3px; margin: 13px auto 0; background: #087bdc; }
+	.package-compare { margin: 0 0 34px; border: 1px solid rgba(103, 232, 249, .3); background: #071a32; color: #fff; box-shadow: 0 16px 32px rgba(2, 11, 31, .18); overflow: hidden; }
+	.package-compare-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding: 22px 24px 18px; border-bottom: 1px solid rgba(103, 232, 249, .22); background: linear-gradient(100deg, rgba(8, 123, 220, .2), transparent); }
+	.package-compare-heading h3 { margin: 0; color: #fff; font-size: 22px; }
+	.package-compare-heading p { max-width: 390px; margin: 0; color: #a9bad1; font-size: 11px; line-height: 1.45; text-align: right; }
+	.package-compare-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+	.package-compare-table th, .package-compare-table td { padding: 14px 16px; border-right: 1px solid rgba(155, 180, 202, .16); border-bottom: 1px solid rgba(155, 180, 202, .16); text-align: left; vertical-align: top; }
+	.package-compare-table th:last-child, .package-compare-table td:last-child { border-right: 0; }
+	.package-compare-table tr:last-child td { border-bottom: 0; }
+	.package-compare-table th { color: #67e8f9; font: 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+	.package-compare-table th:first-child { width: 21%; }
+	.package-compare-table td { color: #c6d4e4; font-size: 11px; line-height: 1.45; }
+	.package-compare-table td:first-child { color: #fff; font-weight: 700; }
+	.package-compare-table td:first-child span { display: block; margin-top: 4px; color: #67e8f9; font: 9px var(--mono); font-weight: 400; text-transform: uppercase; }
+	.package-compare-table td strong { display: block; margin-bottom: 3px; color: #f7c934; font-size: 12px; }
+	.package-compare-table td em { color: #9bb4ca; font-size: 10px; font-style: normal; }
+	.package-compare-note { margin: 0; padding: 12px 16px; border-top: 1px solid rgba(103, 232, 249, .22); color: #9bb4ca; font-size: 10px; line-height: 1.45; }
+	.package-compare-note strong { color: #67e8f9; }
 	.package-grid { display: grid; grid-template-columns: 1fr; gap: 28px; }
 	.legacy-package-grid, .legacy-monthly-services, .legacy-form-package-grid { display: none; }
 	.service-period { margin-top: 28px; }
@@ -40,6 +57,7 @@
 	.form-package-panel.social .form-package-item button { border-color: #139447; background: #139447; }
 	.form-package-panel.carousel .form-package-item button { border-color: #d06a13; background: #d06a13; }
 	@media (max-width: 760px) { .form-package-grid { grid-template-columns: 1fr; } }
+	@media (max-width: 700px) { .package-compare-heading { display: block; } .package-compare-heading p { margin-top: 8px; text-align: left; } .package-compare-table { min-width: 680px; } .package-compare { overflow-x: auto; } .package-compare-note { min-width: 680px; } }
 	.package-panel { min-width: 0; padding: 20px; border: 1px solid rgba(6, 27, 69, .14); border-radius: 7px; background: rgba(255, 255, 255, .88); color: #061b45; box-shadow: 0 8px 24px rgba(6, 27, 69, .08); }
 	.package-panel.video { --package-color: #087bdc; --package-soft: #e8f3ff; }
 	.package-panel.photo { --package-color: #139447; --package-soft: #e9f8ef; }
@@ -315,6 +333,7 @@
 <section class="page-hero section-shell"><p class="eyebrow">02 / Layanan GASS</p><h1>Semua yang kamu butuhkan<br>untuk <em>naik level.</em></h1><p class="hero-intro">Dari fondasi digital sampai eksekusi harian, kami bantu brand tampil jelas, konsisten, dan siap bertumbuh.</p></section>
 <section class="services section-shell services-page">
 	<div class="package-intro"><h2>Pilihan Layanan Kami</h2><p>Solusi konten digital berbasis AI yang kreatif, cepat, dan terjangkau.</p></div>
+	<div class="package-compare"><div class="package-compare-heading"><h3>Bandingkan Paket</h3><p>Ringkasan ini membantu kamu menemukan layanan yang paling sesuai dengan kebutuhan bisnis.</p></div><table class="package-compare-table"><thead><tr><th>Layanan</th><th>Cocok untuk</th><th>Yang didapat</th><th>Pilihan harga</th></tr></thead><tbody><tr><td>Website<span>01 / Fondasi digital</span></td><td>Bisnis yang ingin tampil profesional atau menjual produk online.</td><td><strong>Website siap pakai</strong>Company profile, landing page, e-commerce, atau sistem kustom.</td><td><strong>Rp 3.500.000 - 8.000.000</strong><em>Satuan / project</em></td></tr><tr><td>Social Media<span>02 / Konsistensi brand</span></td><td>Brand yang ingin hadir konsisten di kanal sosial.</td><td><strong>Konten dan pengelolaan</strong>Pembuatan akun, content planning, publishing, dan campaign.</td><td><strong>Rp 100.000 - 300.000</strong><em>Satuan</em><br><strong>Rp 1.000.000</strong><em>Per bulan</em></td></tr><tr><td>Video AI<span>03 / Konten bergerak</span></td><td>Promosi, edukasi, storytelling, dan iklan yang lebih menarik.</td><td><strong>Video berbasis AI</strong>Durasi, scene, script, voice over, animasi, dan editing sesuai level paket.</td><td><strong>Rp 100.000 - 300.000</strong><em>Per video</em><br><strong>Rp 3.000.000 - 9.000.000</strong><em>Per bulan</em></td></tr><tr><td>Carousel<span>04 / Visual informatif</span></td><td>Brand yang membutuhkan konten edukasi dan promosi yang mudah dipindai.</td><td><strong>Desain carousel</strong>2 hingga 10 slide, copywriting, visual AI, dan desain premium.</td><td><strong>Rp 20.000 - 55.000</strong><em>Per desain</em><br><strong>Rp 600.000 - 1.650.000</strong><em>Per bulan</em></td></tr></tbody></table><p class="package-compare-note"><strong>Catatan:</strong> harga dapat disesuaikan berdasarkan fitur, jumlah konten, tingkat kompleksitas, dan kebutuhan khusus project.</p></div>
 	<div class="service-period"><div class="service-period-title"><h3>Paket Satuan</h3><span>Per item / satu kali pengerjaan</span></div><div class="form-package-grid">
 		<article class="form-package-panel website"><h3>A. Website Management</h3><p>Pembuatan website untuk kebutuhan bisnis.</p><ul class="form-package-list"><li class="form-package-item"><strong>Website Basic</strong><span class="form-package-price">Rp 3.500.000</span><button type="button" data-order-package="Pembuatan Website Basic" data-order-price="3500000">Pesan Sekarang</button></li><li class="form-package-item"><strong>Website Standar</strong><span class="form-package-price">Rp 5.000.000</span><button type="button" data-order-package="Pembuatan Website Standar" data-order-price="5000000">Pesan Sekarang</button></li><li class="form-package-item"><strong>Website Pro</strong><span class="form-package-price">Rp 8.000.000</span><button type="button" data-order-package="Pembuatan Website Pro" data-order-price="8000000">Pesan Sekarang</button></li></ul></article>
 		<article class="form-package-panel social"><h3>B. Social Media Management</h3><p>Pembuatan akun media sosial terintegrasi.</p><ul class="form-package-list"><li class="form-package-item"><strong>Social Media Basic</strong><span class="form-package-price">Rp 100.000</span><button type="button" data-order-package="Pembuatan Social Media Basic" data-order-price="100000">Pesan Sekarang</button></li><li class="form-package-item"><strong>Social Media Standar</strong><span class="form-package-price">Rp 200.000</span><button type="button" data-order-package="Pembuatan Social Media Standar" data-order-price="200000">Pesan Sekarang</button></li><li class="form-package-item"><strong>Social Media Pro</strong><span class="form-package-price">Rp 300.000</span><button type="button" data-order-package="Pembuatan Social Media Pro" data-order-price="300000">Pesan Sekarang</button></li></ul></article>
