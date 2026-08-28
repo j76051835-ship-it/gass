@@ -47,6 +47,25 @@ it('uses active service data when answering a pricing question', function () {
         ->assertJsonPath('follow_up_questions.0', 'Apa saja yang memengaruhi harga project?');
 });
 
+it('explains the factors that influence project pricing', function () {
+    $this->postJson(route('ai.chat'), ['message' => 'Apa saja yang memengaruhi harga project?'])
+        ->assertOk()
+        ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Ruang lingkup')
+            && str_contains($message, 'Kompleksitas fitur dan integrasi')
+            && str_contains($message, 'Dukungan setelah rilis'));
+});
+
+it('does not inherit a previous pricing topic for a complete price question', function () {
+    $conversation = AIConversation::create(['session_id' => 'pricing-session', 'title' => 'Pricing questions']);
+    $service = app(GassAIService::class);
+
+    $service->reply($conversation, 'Apa saja yang memengaruhi harga project?', true);
+    $reply = $service->reply($conversation, 'Berapa harga layanan GASS?', true);
+
+    expect($reply)->not->toContain('Ruang lingkup')
+        ->and($reply)->toContain('layanan yang tersedia di website GASS');
+});
+
 it('recommends an ecommerce direction for an online shop question', function () {
     $this->postJson(route('ai.chat'), ['message' => 'Saya punya toko obat dan ingin jualan online'])
         ->assertOk()

@@ -119,12 +119,15 @@ class GassAIService
     private function fallbackReply(string $message, AIConversation $conversation): string
     {
         $normalized = mb_strtolower($message);
-        if (preg_match('/^(fitur|fiturnya|berapa|yang|iya|ya|lanjut|terus|detail|jelaskan)\b/u', $normalized)) {
+        if (preg_match('/^(fitur|fiturnya|yang|iya|ya|lanjut|terus|detail|jelaskan)\b/u', $normalized)) {
             $previousMessages = $conversation->messages()->where('role', 'user')->latest()->skip(1)->limit(3)->pluck('message')->reverse()->implode(' ');
             $normalized .= ' '.mb_strtolower($previousMessages);
         }
         if (preg_match('/\b(hai|halo|hello|hi|pagi|siang|sore|malam)\b/u', $normalized)) {
             return 'Halo! Saya GASS AI. Saya bisa membantu memilih layanan, melihat kisaran harga, memahami portfolio, atau menyusun kebutuhan project kamu.';
+        }
+        if (str_contains($normalized, 'memengaruhi harga project') || str_contains($normalized, 'mempengaruhi harga project') || str_contains($normalized, 'memengaruhi harga proyek') || str_contains($normalized, 'mempengaruhi harga proyek')) {
+            return "Harga project biasanya dipengaruhi oleh beberapa hal berikut:\n\n1. Ruang lingkup dan tujuan project: website company profile, e-commerce, aplikasi internal, branding, atau layanan maintenance memiliki kebutuhan yang berbeda.\n2. Jumlah halaman, modul, dan level akses: semakin banyak halaman, fitur, jenis pengguna, serta dashboard yang dibutuhkan, semakin besar waktu pengerjaannya.\n3. Kompleksitas fitur dan integrasi: contohnya katalog, pencarian, keranjang, checkout, pembayaran, API, WhatsApp, email, atau sistem pihak ketiga.\n4. Desain dan konten: kebutuhan desain UI/UX khusus, animasi, penulisan copy, foto produk, dan input data juga dapat memengaruhi biaya.\n5. Kebutuhan teknis dan target waktu: keamanan, performa, responsif di berbagai perangkat, deployment, serta deadline yang lebih singkat dapat menambah effort.\n6. Dukungan setelah rilis: maintenance, update konten, monitoring, backup, dan pengembangan lanjutan dapat dihitung sebagai layanan terpisah.\n\nKarena itu, harga final ditentukan setelah kebutuhan dan prioritas project dipahami. Agar bisa diarahkan ke paket yang sesuai, jelaskan jenis bisnis, fitur utama, dan target waktu yang kamu inginkan.";
         }
         if (str_contains($normalized, 'harga') || str_contains($normalized, 'biaya') || str_contains($normalized, 'berapa')) {
             $packagesQuery = ServicePackage::query()->where('is_active', true);
