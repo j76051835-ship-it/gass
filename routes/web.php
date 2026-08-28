@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AI\GassAIController;
+use App\Http\Controllers\MidtransPaymentController;
+use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ReviewController;
 use App\Models\GalleryItem;
 use App\Models\PromoBanner;
@@ -40,6 +43,9 @@ Route::get('/kontak', function () {
 })->name('contact');
 
 Route::post('/ulasan', [ReviewController::class, 'store'])->name('reviews.store');
+Route::post('/ai/chat', [GassAIController::class, 'chat'])->middleware('throttle:ai-chat')->name('ai.chat');
+Route::post('/payment/midtrans/token', [MidtransPaymentController::class, 'token'])->name('payment.midtrans.token');
+Route::post('/payment/midtrans/webhook', [MidtransWebhookController::class, 'handle'])->name('payment.midtrans.webhook');
 Route::delete('/ulasan/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
 
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');

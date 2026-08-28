@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="GASS adalah growth partner untuk bisnis yang ingin bertumbuh lebih cepat melalui strategi digital yang tajam.">
     <title>@yield('title', 'GASS — Growth Acceleration Strategic Services')</title>
+    <script id="midtrans-script" src="{{ config('services.midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}" data-client-key="{{ config('services.midtrans.client_key') }}" type="text/javascript"></script>
     @if (app()->environment('production') && file_exists(public_path('build/manifest.json')))
         @php($viteManifest = json_decode(file_get_contents(public_path('build/manifest.json')), true))
         <link rel="stylesheet" href="{{ asset('build/'.$viteManifest['resources/css/app.css']['file']) }}">
@@ -69,6 +71,7 @@
     <main id="top">@yield('content')</main>
 
     <footer class="site-footer section-shell"><div class="footer-brand"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><div><strong>PT. GASS DIGITAL SOLUTIONS</strong><small>Growth Acceleration Strategic Services</small></div></div><div class="footer-copyright">© {{ date('Y') }} GASS. Built to move.</div><div class="social-links"><a href="https://www.instagram.com/gass.generations/" target="_blank" rel="noreferrer">Instagram ↗</a><a href="https://www.tiktok.com/@gass.generations" target="_blank" rel="noreferrer">TikTok ↗</a><a href="mailto:gassdigitalsoultions@gmail.com">Email ↗</a></div><a href="#top">Kembali ke atas ↑</a></footer>
+    @include('components.gass-ai')
     @stack('scripts')
 </body>
 </html>

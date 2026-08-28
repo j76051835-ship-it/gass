@@ -221,7 +221,7 @@
 	.invoice-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; color: #61708d; font-size: 9px; }
 	.invoice-meta strong { display: block; margin-top: 4px; color: var(--ink); font-size: 10px; }
 	.invoice-table { width: 100%; overflow: hidden; }
-	.invoice-table-head, .invoice-line { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr); gap: 10px; padding: 11px 10px; border-bottom: 1px solid #cbd4e1; color: #061b45; font-size: 11px; }
+	.invoice-table-head, .invoice-line { display: grid; grid-template-columns: minmax(0, 2fr) minmax(92px, 1fr) minmax(92px, 1fr); align-items: center; gap: 10px; padding: 11px 10px; border-bottom: 1px solid #cbd4e1; color: #061b45; font-size: 11px; }
 	.invoice-table-head { background: #087bdc; color: #fff; font-weight: 700; }
 	.invoice-line { background: #fff; font-weight: 500; }
 	.invoice-line:nth-child(even) { background: #f4f8fc; }
@@ -276,7 +276,7 @@
 		.order-dialog label, .order-dialog legend { margin-bottom: 16px; }
 		.order-dialog input:not([type="checkbox"]), .order-dialog textarea, .order-dialog select { min-height: 48px; padding: 12px; font-size: 16px; }
 		.order-dialog textarea { min-height: 96px; }
-		.invoice-table-head, .invoice-line { grid-template-columns: minmax(0, 1.6fr) minmax(0, .9fr) minmax(0, .9fr); gap: 5px; padding: 10px 6px; font-size: 9px; }
+		.invoice-table-head, .invoice-line { grid-template-columns: minmax(0, 1.6fr) minmax(76px, .9fr) minmax(76px, .9fr); gap: 5px; padding: 10px 6px; font-size: 9px; }
 		.invoice-line small { font-size: 8px; }
 		.order-check { min-height: 38px; }
 		.order-next, .order-confirm { min-height: 48px; padding: 13px 14px; }

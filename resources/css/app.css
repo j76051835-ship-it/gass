@@ -26,6 +26,131 @@ body {
     background: var(--paper);
     font-family: var(--display);
 }
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+.gass-ai {
+    position: fixed;
+    z-index: 120;
+    left: 24px;
+    bottom: 24px;
+    font-family: var(--display);
+}
+.gass-ai-launcher {
+    position: relative;
+    display: grid;
+    width: 62px;
+    height: 62px;
+    place-items: center;
+    border: 2px solid var(--ink);
+    border-radius: 50%;
+    background: var(--yellow);
+    color: var(--ink);
+    font: 700 16px var(--mono);
+    cursor: pointer;
+    box-shadow: 5px 5px 0 var(--ink);
+    transition: transform .2s ease, box-shadow .2s ease;
+    animation: gass-ai-pulse 3s ease-in-out infinite;
+}
+.gass-ai-launcher:hover { transform: translate(2px, 2px); box-shadow: 3px 3px 0 var(--ink); }
+.gass-ai-cs {
+    position: absolute;
+    inset: 8px 8px auto;
+    height: 31px;
+    border: 3px solid var(--ink);
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    pointer-events: none;
+}
+.gass-ai-cs::before,
+.gass-ai-cs::after {
+    position: absolute;
+    top: 17px;
+    width: 6px;
+    height: 13px;
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    background: var(--orange);
+    content: "";
+}
+.gass-ai-cs::before { left: -7px; }
+.gass-ai-cs::after { right: -7px; }
+.gass-ai-launcher-mark {
+    position: relative;
+    z-index: 1;
+    display: block;
+    line-height: 1;
+}
+.gass-ai-unread { position: absolute; top: 1px; right: 1px; width: 11px; height: 11px; border: 2px solid var(--paper); border-radius: 50%; background: var(--orange); }
+.gass-ai-panel { position: absolute; left: 0; bottom: 78px; display: flex; width: min(390px, calc(100vw - 32px)); height: min(590px, calc(100vh - 120px)); flex-direction: column; overflow: hidden; border: 1px solid var(--ink); background: var(--paper); box-shadow: 9px 9px 0 var(--ink); opacity: 0; pointer-events: none; transform: translateY(14px) scale(.98); transform-origin: bottom left; transition: opacity .2s ease, transform .2s ease; }
+.gass-ai-panel.is-open { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+.gass-ai-header { display: flex; justify-content: space-between; padding: 18px 20px; background: var(--ink); color: var(--paper); }
+.gass-ai-header div { display: grid; gap: 5px; }
+.gass-ai-kicker { color: var(--yellow); font: 10px var(--mono); letter-spacing: .08em; }
+.gass-ai-header strong { font-size: 23px; line-height: 1; }
+.gass-ai-status { color: #b8c7d8; font: 11px var(--mono); }
+.gass-ai-status i { display: inline-block; width: 6px; height: 6px; margin-right: 5px; border-radius: 50%; background: #63db9a; }
+.gass-ai-close { align-self: start; border: 0; background: transparent; color: var(--paper); font: 20px var(--mono); cursor: pointer; }
+.gass-ai-messages { display: flex; flex: 1; flex-direction: column; gap: 12px; overflow-y: auto; padding: 18px; }
+.gass-ai-message { max-width: 86%; padding: 11px 13px; font-size: 13px; line-height: 1.5; animation: gass-ai-message-in .2s ease both; }
+.gass-ai-message.is-assistant { align-self: flex-start; border: 1px solid var(--line); background: #fffdf8; white-space: pre-line; }
+.gass-ai-message.is-user { align-self: flex-end; background: var(--ink); color: var(--paper); }
+.gass-ai-quick { display: grid; gap: 7px; margin-top: 2px; }
+.gass-ai-quick p { margin: 0 0 2px; font-size: 12px; }
+.gass-ai-quick button {
+    padding: 10px 11px;
+    border: 2px solid var(--ink);
+    background: #d9f7ff;
+    color: var(--ink);
+    text-align: left;
+    font: 500 11px var(--mono);
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform .15s ease, background-color .15s ease, box-shadow .15s ease;
+}
+.gass-ai-quick button:hover,
+.gass-ai-quick button:focus-visible {
+    background: var(--yellow);
+    outline: none;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--ink);
+}
+.gass-ai-follow-ups { margin-top: -2px; }
+.gass-ai-typing { padding: 0 18px 8px; color: #52647a; font: 11px var(--mono); }
+.gass-ai-typing span { animation: gass-ai-dot 1s infinite; }
+.gass-ai-typing span:nth-child(2) { animation-delay: .15s; }.gass-ai-typing span:nth-child(3) { animation-delay: .3s; }
+.gass-ai-form { display: flex; gap: 8px; padding: 12px 18px 8px; border-top: 1px solid var(--line); }
+.gass-ai-form input { min-width: 0; flex: 1; border: 1px solid var(--ink); padding: 11px; background: #fffdf8; color: var(--ink); font: 12px var(--display); }
+.gass-ai-form button { border: 1px solid var(--ink); padding: 0 13px; background: var(--yellow); color: var(--ink); font: 11px var(--mono); cursor: pointer; }
+.gass-ai-privacy, .gass-ai-panel footer { margin: 0; padding: 0 18px 9px; color: #52647a; font: 9px var(--mono); }
+.gass-ai-panel footer { padding-bottom: 14px; text-align: center; }
+@keyframes gass-ai-pulse { 0%, 100% { box-shadow: 5px 5px 0 var(--ink); } 50% { box-shadow: 5px 5px 0 var(--ink), 0 0 0 7px rgba(247, 201, 52, .18); } }
+@keyframes gass-ai-message-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes gass-ai-dot { 0%, 60%, 100% { opacity: .25; } 30% { opacity: 1; } }
+@media (max-width: 600px) {
+    .gass-ai { left: 14px; bottom: 14px; }
+    .gass-ai-launcher {
+        width: 54px;
+        height: 54px;
+        font-size: 14px;
+        box-shadow: 4px 4px 0 var(--ink);
+    }
+    .gass-ai-panel {
+        bottom: 72px;
+        width: min(360px, calc(100vw - 32px));
+        height: min(500px, calc(100vh - 150px));
+        max-height: calc(100dvh - 150px);
+    }
+}
+@media (prefers-reduced-motion: reduce) { .gass-ai-launcher, .gass-ai-message, .gass-ai-panel { animation: none; transition: none; } }
 a {
     color: inherit;
     text-decoration: none;
@@ -4019,6 +4144,25 @@ button, .button {
         display: none;
     }
 }
+.gass-ai-panel,
+.gass-ai-panel * { color: #102033; }
+.gass-ai-panel { background: #f8fbff !important; border-color: #102033 !important; }
+.gass-ai-panel .gass-ai-header { background: #102033 !important; color: #ffffff !important; }
+.gass-ai-panel .gass-ai-header *,
+.gass-ai-panel .gass-ai-close { color: #ffffff !important; }
+.gass-ai-panel .gass-ai-kicker { color: #67e8f9 !important; }
+.gass-ai-panel .gass-ai-status { color: #dbeafe !important; }
+.gass-ai-panel .gass-ai-message.is-assistant { background: #ffffff !important; color: #102033 !important; border-color: #9fb4c8 !important; }
+.gass-ai-panel .gass-ai-message.is-user { background: #102033 !important; color: #ffffff !important; }
+.gass-ai-panel .gass-ai-quick p { color: #102033 !important; }
+.gass-ai-panel .gass-ai-quick button { background: #e7f8fc !important; color: #102033 !important; border-color: #16758c !important; }
+.gass-ai-panel .gass-ai-quick button:hover { background: #67e8f9 !important; }
+.gass-ai-panel .gass-ai-form input { background: #ffffff !important; color: #102033 !important; border-color: #6f879d !important; }
+.gass-ai-panel .gass-ai-form input::placeholder { color: #52647a !important; opacity: 1; }
+.gass-ai-panel .gass-ai-form button { background: #67e8f9 !important; color: #102033 !important; border-color: #102033 !important; }
+.gass-ai-panel .gass-ai-privacy,
+.gass-ai-panel footer,
+.gass-ai-panel .gass-ai-typing { color: #52647a !important; }
 .site-footer,
 .site-footer .footer-brand,
 .site-footer .footer-copyright,

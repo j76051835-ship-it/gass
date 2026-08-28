@@ -35,4 +35,18 @@ return [
         ],
     ],
 
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    ],
+
+    'gass_ai' => [
+        'provider' => env('AI_PROVIDER', 'openai'),
+        'api_key' => env('AI_API_KEY'),
+        'api_url' => env('AI_API_URL'),
+        'model' => env('AI_MODEL', 'gpt-4o-mini'),
+        'whatsapp_url' => env('GASS_WHATSAPP_URL', 'https://wa.me/6285890007359'),
+    ],
+
 ];
