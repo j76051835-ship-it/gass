@@ -356,7 +356,7 @@ if (aboutBook && aboutBookPages && aboutBookCards.length > 1) {
         window.setTimeout(() => {
             oldCard.classList.remove("is-turning");
             aboutBookPages.classList.remove("is-flipping-next", "is-flipping-prev");
-        }, 850);
+        }, 1250);
     };
 
     aboutBookPages.classList.add("is-ready");
@@ -377,7 +377,7 @@ if (aboutBook && aboutBookPages && aboutBookCards.length > 1) {
         event.preventDefault();
         wheelLocked = true;
         showBookPage(nextPage);
-        window.setTimeout(() => { wheelLocked = false; }, 900);
+        window.setTimeout(() => { wheelLocked = false; }, 1250);
     }, { passive: false });
 
     aboutBook.addEventListener("touchstart", (event) => {
