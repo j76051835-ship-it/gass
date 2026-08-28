@@ -103,6 +103,8 @@ body {
 .gass-ai-message { max-width: 86%; padding: 11px 13px; font-size: 13px; line-height: 1.5; animation: gass-ai-message-in .2s ease both; }
 .gass-ai-message.is-assistant { align-self: flex-start; border: 1px solid var(--line); background: #fffdf8; white-space: pre-line; }
 .gass-ai-message.is-user { align-self: flex-end; background: var(--ink); color: var(--paper); }
+.gass-ai-message a { color: #087bdc; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.gass-ai-message a:hover { color: #e15b4f; }
 .gass-ai-quick { display: grid; gap: 7px; margin-top: 2px; }
 .gass-ai-quick p { margin: 0 0 2px; font-size: 12px; }
 .gass-ai-quick button {

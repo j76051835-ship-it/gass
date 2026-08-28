@@ -17,10 +17,29 @@ if (gassAI) {
         unread.hidden = isOpen;
     };
 
+    const renderMessage = (element, message) => {
+        const urlPattern = /(https?:\/\/[^\s]+)/g;
+        let lastIndex = 0;
+
+        message.replace(urlPattern, (url, offset) => {
+            element.append(document.createTextNode(message.slice(lastIndex, offset)));
+            const link = document.createElement("a");
+            link.href = url.replace(/[.,!?;:]+$/, "");
+            link.textContent = link.href;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            element.append(link);
+            lastIndex = offset + url.length;
+            return url;
+        });
+
+        element.append(document.createTextNode(message.slice(lastIndex)));
+    };
+
     const addMessage = (message, role) => {
         const element = document.createElement("div");
         element.className = `gass-ai-message is-${role}`;
-        element.textContent = message;
+        renderMessage(element, message);
         messages.append(element);
         messages.scrollTop = messages.scrollHeight;
     };
