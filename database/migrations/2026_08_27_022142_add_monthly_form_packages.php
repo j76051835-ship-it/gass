@@ -14,7 +14,7 @@ return new class extends Migration
             ['slug' => 'video-ai-standard-bulanan', 'name' => 'Video AI Standard Bulanan', 'base_price' => 3000000],
             ['slug' => 'video-ai-premium-bulanan', 'name' => 'Video AI Premium Bulanan', 'base_price' => 5250000],
             ['slug' => 'video-ai-professional-bulanan', 'name' => 'Video AI Professional Bulanan', 'base_price' => 9000000],
-            ['slug' => 'carousel-standard-bulanan', 'name' => 'Carousel Standard Bulanan', 'base_price' => 600000],
+            ['slug' => 'carousel-standard-bulanan', 'name' => 'Carousel Standard Bulanan', 'base_price' => 750000],
             ['slug' => 'carousel-premium-bulanan', 'name' => 'Carousel Premium Bulanan', 'base_price' => 1050000],
             ['slug' => 'carousel-pro-bulanan', 'name' => 'Carousel Pro Bulanan', 'base_price' => 1650000],
         ];

@@ -37,9 +37,9 @@ class GassAIService
         }
         if (str_contains($normalized, 'harga') || str_contains($normalized, 'biaya') || str_contains($normalized, 'rp ')) {
             return [
-                'Apa saja yang memengaruhi harga project?',
                 'Saya ingin rekomendasi paket untuk bisnis saya',
                 'Bagaimana cara memesan layanan?',
+                'Lihat layanan yang tersedia',
             ];
         }
 
@@ -126,25 +126,9 @@ class GassAIService
         if (preg_match('/\b(hai|halo|hello|hi|pagi|siang|sore|malam)\b/u', $normalized)) {
             return 'Halo! Saya GASS AI. Saya bisa membantu memilih layanan, melihat kisaran harga, memahami portfolio, atau menyusun kebutuhan project kamu.';
         }
-        if (str_contains($normalized, 'memengaruhi harga project') || str_contains($normalized, 'mempengaruhi harga project') || str_contains($normalized, 'memengaruhi harga proyek') || str_contains($normalized, 'mempengaruhi harga proyek')) {
-            return "Harga project biasanya dipengaruhi oleh beberapa hal berikut:\n\n1. Ruang lingkup dan tujuan project: website company profile, e-commerce, aplikasi internal, branding, atau layanan maintenance memiliki kebutuhan yang berbeda.\n2. Jumlah halaman, modul, dan level akses: semakin banyak halaman, fitur, jenis pengguna, serta dashboard yang dibutuhkan, semakin besar waktu pengerjaannya.\n3. Kompleksitas fitur dan integrasi: contohnya katalog, pencarian, keranjang, checkout, pembayaran, API, WhatsApp, email, atau sistem pihak ketiga.\n4. Desain dan konten: kebutuhan desain UI/UX khusus, animasi, penulisan copy, foto produk, dan input data juga dapat memengaruhi biaya.\n5. Kebutuhan teknis dan target waktu: keamanan, performa, responsif di berbagai perangkat, deployment, serta deadline yang lebih singkat dapat menambah effort.\n6. Dukungan setelah rilis: maintenance, update konten, monitoring, backup, dan pengembangan lanjutan dapat dihitung sebagai layanan terpisah.\n\nKarena itu, harga final ditentukan setelah kebutuhan dan prioritas project dipahami. Agar bisa diarahkan ke paket yang sesuai, jelaskan jenis bisnis, fitur utama, dan target waktu yang kamu inginkan.";
-        }
+
         if (str_contains($normalized, 'harga') || str_contains($normalized, 'biaya') || str_contains($normalized, 'berapa')) {
-            $packagesQuery = ServicePackage::query()->where('is_active', true);
-            if (str_contains($normalized, 'website')) {
-                $packagesQuery->where('name', 'like', '%website%');
-            }
-            $packages = $packagesQuery->latest('id')->limit(6)->get();
-            if ($packages->isEmpty()) {
-                $packages = ServicePackage::query()->where('is_active', true)->orderBy('id')->limit(6)->get();
-            }
-            if ($packages->isNotEmpty()) {
-                $prices = $packages->map(fn (ServicePackage $package): string => "- {$package->name}: Rp ".number_format($package->final_price, 0, ',', '.'))->implode("\n");
-
-                return "Berikut beberapa layanan yang tersedia di website GASS:\n{$prices}\n\nHarga final menyesuaikan fitur dan kompleksitas kebutuhan kamu. Layanan mana yang ingin kamu bahas?";
-            }
-
-            return 'Harga bergantung pada kompleksitas project. Pilih jenis kebutuhanmu agar saya bisa mengarahkan ke layanan yang paling sesuai.';
+            return "Harga layanan yang tersedia di website GASS saat ini:\n\n- Website Basic: Website Basic mulai dari Rp 4.000.000.\n- Website Standar: Website Standar mulai dari Rp 5.000.000.\n- Website Pro: Website Pro mulai dari Rp 8.000.000.\n- Maintenance Website Basic: Maintenance Website Basic seharga Rp 500.000 / bulan.\n- Maintenance Website Standard: Maintenance Website Standard seharga Rp 750.000 / bulan.\n- Maintenance Website Professional: Maintenance Website Professional seharga Rp 1.000.000 / bulan.\n- Maintenance Website Advanced: Maintenance Website Advanced seharga Rp 1.500.000 / bulan.\n- Maintenance Website Premium: Maintenance Website Premium seharga Rp 2.000.000 / bulan.\n\n- Social Media Basic: Social Media Basic seharga Rp 100.000.\n- Social Media Standar: Social Media Standar seharga Rp 200.000.\n- Social Media Pro: Social Media Pro seharga Rp 300.000.\n- Maintenance Social Media: Maintenance Social Media seharga Rp 1.000.000 / bulan.\n\n- Video AI Standard: Video AI Standard mulai dari Rp 100.000 / satuan.\n- Video AI Premium: Video AI Premium mulai dari Rp 175.000 / satuan.\n- Video AI Professional: Video AI Professional mulai dari Rp 300.000 / satuan.\n- Video AI Standard Bulanan: Video AI Standard Bulanan mulai dari Rp 3.000.000 / bulan.\n- Video AI Premium Bulanan: Video AI Premium Bulanan mulai dari Rp 5.250.000 / bulan.\n- Video AI Professional Bulanan: Video AI Professional Bulanan mulai dari Rp 9.000.000 / bulan.\n\n- Carousel Standard: Carousel Standard mulai dari Rp 25.000 / satuan.\n- Carousel Premium: Carousel Premium mulai dari Rp 35.000 / satuan.\n- Carousel Pro: Carousel Pro mulai dari Rp 55.000 / satuan.\n- Carousel Standard Bulanan: Carousel Standard Bulanan mulai dari Rp 750.000 / bulan.\n- Carousel Premium Bulanan: Carousel Premium Bulanan mulai dari Rp 1.050.000 / bulan.\n- Carousel Pro Bulanan: Carousel Pro Bulanan mulai dari Rp 1.650.000 / bulan.\n\nKalau mau, saya bisa bantu pilih paket yang paling cocok untuk kebutuhan bisnis Anda.";
         }
         if (str_contains($normalized, 'medsos') || str_contains($normalized, 'media sosial') || str_contains($normalized, 'social media') || str_contains($normalized, 'instagram') || str_contains($normalized, 'tiktok') || str_contains($normalized, 'konten') || str_contains($normalized, 'ngembangin') || str_contains($normalized, 'mengembangkan')) {
             $packages = ServicePackage::query()->where('is_active', true)->where(function ($query): void {
@@ -159,9 +143,7 @@ class GassAIService
             return 'Proses pemesanan GASS: pilih layanan, tambahkan ke keranjang, lengkapi formulir kebutuhan, periksa invoice, lalu lanjutkan pembayaran melalui checkout. Tim GASS akan menindaklanjuti detail project setelah pesanan diterima.';
         }
         if (str_contains($normalized, 'layanan apa') || str_contains($normalized, 'lihat layanan')) {
-            $services = ServicePackage::query()->where('is_active', true)->latest('id')->limit(8)->pluck('name')->implode(', ');
-
-            return $services ? "Layanan aktif di website GASS: {$services}. Pilih Tanya harga untuk melihat harga layanan yang tersedia." : 'Belum ada layanan aktif yang tercatat di website GASS.';
+            return "Berikut layanan aktif di GASS:\n\n**Website & Maintenance:**\nWebsite Basic, Standar, Pro, plus paket maintenance bulanan dari Rp 500.000 hingga Rp 2.000.000.\n\n**Social Media:**\nPembuatan konten social media (Basic, Standar, Pro) dan maintenance bulanan Rp 1.000.000.\n\n**Video AI:**\nVideo AI standar, premium, profesional mulai Rp 100.000/satuan atau paket bulanan Rp 3.000.000 - Rp 9.000.000.\n\n**Carousel Foto:**\nCarousel Standard, Premium, Pro mulai Rp 25.000/satuan atau paket bulanan Rp 750.000 - Rp 1.650.000.\n\nKlik \"Tanya harga\" untuk rincian lengkap setiap paket.";
         }
         if (str_contains($normalized, 'portfolio') || str_contains($normalized, 'portofolio') || str_contains($normalized, 'karya')) {
             $portfolio = GalleryItem::query()->where('is_active', true)->latest()->limit(5)->pluck('title')->filter()->implode(', ');

@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $packages = [
-            ['slug' => 'pembuatan-website-basic', 'name' => 'Pembuatan Website Basic', 'base_price' => 3500000],
+            ['slug' => 'pembuatan-website-basic', 'name' => 'Pembuatan Website Basic', 'base_price' => 4000000],
             ['slug' => 'pembuatan-website-standar', 'name' => 'Pembuatan Website Standar', 'base_price' => 5000000],
             ['slug' => 'pembuatan-website-pro', 'name' => 'Pembuatan Website Pro', 'base_price' => 8000000],
             ['slug' => 'maintenance-website-basic', 'name' => 'Maintenance Website Basic', 'base_price' => 500000],
@@ -50,13 +50,13 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'video-ai-standard-satuan', 'name' => 'Video AI Standard', 'base_price' => 100000],
             ['slug' => 'video-ai-premium-satuan', 'name' => 'Video AI Premium', 'base_price' => 175000],
             ['slug' => 'video-ai-professional', 'name' => 'Video AI Professional', 'base_price' => 300000],
-            ['slug' => 'carousel-standard', 'name' => 'Carousel Standard', 'base_price' => 20000],
+            ['slug' => 'carousel-standard', 'name' => 'Carousel Standard', 'base_price' => 25000],
             ['slug' => 'carousel-premium', 'name' => 'Carousel Premium', 'base_price' => 35000],
             ['slug' => 'carousel-pro', 'name' => 'Carousel Pro', 'base_price' => 55000],
             ['slug' => 'video-ai-standard-bulanan', 'name' => 'Video AI Standard Bulanan', 'base_price' => 3000000],
             ['slug' => 'video-ai-premium-bulanan', 'name' => 'Video AI Premium Bulanan', 'base_price' => 5250000],
             ['slug' => 'video-ai-professional-bulanan', 'name' => 'Video AI Professional Bulanan', 'base_price' => 9000000],
-            ['slug' => 'carousel-standard-bulanan', 'name' => 'Carousel Standard Bulanan', 'base_price' => 600000],
+            ['slug' => 'carousel-standard-bulanan', 'name' => 'Carousel Standard Bulanan', 'base_price' => 750000],
             ['slug' => 'carousel-premium-bulanan', 'name' => 'Carousel Premium Bulanan', 'base_price' => 1050000],
             ['slug' => 'carousel-pro-bulanan', 'name' => 'Carousel Pro Bulanan', 'base_price' => 1650000],
             ['slug' => 'ai-video-basic', 'name' => 'AI Video Basic', 'base_price' => 350000],
