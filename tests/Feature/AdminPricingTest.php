@@ -34,7 +34,7 @@ it('authenticates an admin and renders database pricing on services', function (
         ->assertSee('AI Video Basic')
         ->assertSee('"basePrice":350000', false)
         ->assertSee('"price":315000', false)
-        ->assertSee('Rp 4.000.000', false)
+        ->assertSee('Rp 3.500.000', false)
         ->assertSee('Rp 25.000 / satuan', false);
 });
 

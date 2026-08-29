@@ -11,7 +11,7 @@ return new class extends Migration
     public function up(): void
     {
         $packages = [
-            ['slug' => 'pembuatan-website-basic', 'name' => 'Pembuatan Website Basic', 'base_price' => 4000000],
+            ['slug' => 'pembuatan-website-basic', 'name' => 'Pembuatan Website Basic', 'base_price' => 3500000],
             ['slug' => 'pembuatan-website-standar', 'name' => 'Pembuatan Website Standar', 'base_price' => 5000000],
             ['slug' => 'pembuatan-website-pro', 'name' => 'Pembuatan Website Pro', 'base_price' => 8000000],
             ['slug' => 'pembuatan-social-media-basic', 'name' => 'Pembuatan Social Media Basic', 'base_price' => 100000],

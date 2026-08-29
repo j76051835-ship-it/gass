@@ -44,7 +44,7 @@ it('uses active service data when answering a pricing question', function () {
 
     $response->assertOk()
         ->assertJsonPath('message', fn (string $message): bool => str_contains($message, 'Website Basic')
-            && str_contains($message, 'Rp 4.000.000')
+            && str_contains($message, 'Rp 3.500.000')
             && str_contains($message, 'Carousel Standard')
             && str_contains($message, 'Rp 25.000 / satuan'))
         ->assertJsonPath('follow_up_questions.0', 'Saya ingin rekomendasi paket untuk bisnis saya');
