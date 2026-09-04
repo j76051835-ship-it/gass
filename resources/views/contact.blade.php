@@ -145,6 +145,14 @@
         );
     }
 
+    .contact-social.pinterest {
+        background: #e60023;
+    }
+
+    .contact-social.youtube {
+        background: #ff0000;
+    }
+
     /* WHATSAPP */
     .contact-social.whatsapp {
         background: #139447;
@@ -315,6 +323,32 @@
                     <small>↗</small>
                 </span>
 
+            </a>
+
+
+            <!-- PINTEREST -->
+            <a
+                class="contact-social pinterest"
+                href="https://pin.it/34Yxkq9r6"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GASS di Pinterest"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.64 19.31c-.09-1.64-.02-3.61.41-5.48l1.05-4.45s-.27-.54-.27-1.33c0-1.25.73-2.18 1.64-2.18.77 0 1.14.58 1.14 1.27 0 .77-.49 1.92-.74 2.99-.21.89.45 1.61 1.33 1.61 1.6 0 2.68-1.68 2.68-4.1 0-2.14-1.54-3.64-3.75-3.64-2.56 0-4.06 1.92-4.06 3.9 0 .77.3 1.6.67 2.05.07.08.08.15.06.24l-.25 1.02c-.04.16-.13.2-.3.12-1.12-.52-1.82-2.13-1.82-3.43 0-2.79 2.03-5.35 5.85-5.35 3.07 0 5.45 2.19 5.45 5.12 0 3.05-1.92 5.51-4.59 5.51-.9 0-1.75-.47-2.04-1.03l-.55 2.1c-.2.77-.74 1.74-1.1 2.33.83.25 1.71.39 2.62.39A10 10 0 0 0 12 2Z"/></svg>
+                <span>Pinterest <small>↗</small></span>
+            </a>
+
+
+            <!-- YOUTUBE -->
+            <a
+                class="contact-social youtube"
+                href="https://youtube.com/@gassdigitalsolutions?si=-HZ9h297EeObAse6"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GASS di YouTube"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M23.5 6.2a3 3 0 0 0-2.12-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.58A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.12 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.58a3 3 0 0 0 2.12-2.12A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 8.5v7l6.2-3.5-6.2-3.5Z"/></svg>
+                <span>YouTube <small>↗</small></span>
             </a>
 
 
