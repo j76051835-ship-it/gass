@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿                                                                                                                                                                @extends('layouts.app')
 
 @section('title', 'GASS — Growth Acceleration Strategic Services')
 
@@ -47,12 +47,6 @@
         pointer-events: none;
     }
     .home-page .hero-actions .button-yellow { color: #071a32; }
-    .home-follow { display: flex; align-items: center; gap: 14px; margin-top: 28px; }
-    .home-follow-label { margin: 0; color: #9bb4ca; font: 10px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-    .home-follow-links { display: flex; gap: 8px; }
-    .home-follow-link { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(103,232,249,.55); border-radius: 50%; background: #071a32; color: #67e8f9; transition: transform .2s ease, background .2s ease, color .2s ease; }
-    .home-follow-link:hover, .home-follow-link:focus-visible { transform: translateY(-3px); background: #67e8f9; color: #071a32; outline: 0; }
-    .home-follow-link svg { width: 17px; height: 17px; fill: currentColor; }
     .home-trust { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 22px; padding: 24px 0; border-top: 1px solid rgba(103, 232, 249, .28); border-bottom: 1px solid rgba(103, 232, 249, .28); background: linear-gradient(90deg, rgba(7, 26, 50, .92), rgba(7, 26, 50, .68), rgba(7, 26, 50, .92)); overflow: hidden; }
     .home-trust::before { content: ""; position: absolute; top: 0; left: -20%; width: 18%; height: 1px; background: #67e8f9; box-shadow: 0 0 14px #67e8f9; animation: trust-scan 5s ease-in-out infinite; }
     .home-trust-item { position: relative; padding: 0 26px; border-right: 1px solid rgba(155, 180, 202, .24); opacity: 0; animation: trust-rise .7s cubic-bezier(.16, 1, .3, 1) forwards; }
@@ -95,10 +89,156 @@
     .home-gallery-copy p { margin: 0; color: #9bb4ca; font-size: 13px; line-height: 1.5; }
     .home-gallery-card:not(:last-child)::after { display: none; }
     @media (max-width: 700px) {
-        .home-gallery-card:not(:last-child)::after { content: "→\\A GESER"; display: block; position: absolute; z-index: 3; top: 50%; right: 7px; padding: 8px 5px; border: 1px solid rgba(103,232,249,.78); background: rgba(5,11,24,.84); color: #67e8f9; font: 8px/1.3 var(--mono); letter-spacing: .08em; text-align: center; white-space: pre; transform: translateY(-50%); pointer-events: none; animation: gallery-swipe-hint 1.8s ease-in-out infinite; }
+        .home-gallery-card:not(:last-child)::after { content: "→\A GESER"; display: block; position: absolute; z-index: 3; top: 50%; right: 7px; padding: 8px 5px; border: 1px solid rgba(103,232,249,.78); background: rgba(5,11,24,.84); color: #67e8f9; font: 8px/1.3 var(--mono); letter-spacing: .08em; text-align: center; white-space: pre; transform: translateY(-50%); pointer-events: none; animation: gallery-swipe-hint 1.8s ease-in-out infinite; }
     }
     @keyframes gallery-swipe-hint { 0%, 100% { opacity: .58; transform: translate(0, -50%); } 50% { opacity: 1; transform: translate(4px, -50%); } }
     @media (max-width: 700px) { .home-gallery { padding-top: 80px; padding-bottom: 85px; } .home-gallery-heading { display: block; } .home-gallery-heading p:last-child { margin-top: 22px; } .home-gallery-card { flex-basis: min(86vw, 350px); } }
+    .home-page .mobile-social-lockup {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin: 0 0 22px;
+    }
+    .home-page .mobile-social-label {
+        margin: 0;
+        color: #f3d862;
+        font: 700 9px var(--mono);
+        letter-spacing: .18em;
+        text-transform: uppercase;
+    }
+    .home-page .mobile-social-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        perspective: 1000px;
+    }
+    .home-page .mobile-social-row a {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 10px 22px rgba(7, 26, 50, .2), inset 0 1px 0 rgba(255,255,255,.3), 0 0 0 1px rgba(255,255,255,.12);
+        transition: transform .25s ease, filter .25s ease, box-shadow .25s ease;
+        transform-style: preserve-3d;
+        transform: perspective(600px) rotateX(0deg) rotateY(0deg);
+        isolation: isolate;
+    }
+    .home-page .mobile-social-row a::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(135deg, rgba(255,255,255,.46), rgba(255,255,255,0) 42%, rgba(0,0,0,.18));
+        opacity: .92;
+        pointer-events: none;
+    }
+    .home-page .mobile-social-row a::after {
+        content: "";
+        position: absolute;
+        inset: 3px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,.18);
+        pointer-events: none;
+        transform: translateZ(12px);
+    }
+    .home-page .mobile-social-row a:hover,
+    .home-page .mobile-social-row a:focus-visible {
+        transform: perspective(600px) translateY(-5px) rotateX(18deg) rotateY(-18deg) scale(1.06);
+        filter: brightness(1.08);
+        box-shadow: 0 18px 30px rgba(7, 26, 50, .28), 0 0 28px rgba(103, 232, 249, .18), inset 0 1px 0 rgba(255,255,255,.38);
+        outline: 0;
+        animation: social-bounce-3d .45s ease;
+    }
+    @keyframes social-bounce-3d {
+        0% { transform: perspective(600px) translateY(0) rotateX(0deg) rotateY(0deg) scale(1); }
+        35% { transform: perspective(600px) translateY(-8px) rotateX(20deg) rotateY(-20deg) scale(1.08); }
+        100% { transform: perspective(600px) translateY(-5px) rotateX(18deg) rotateY(-18deg) scale(1.06); }
+    }
+    .home-page .mobile-social-row svg {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+        margin: 0 auto;
+    }
+    .home-page .mobile-social-row .instagram-link {
+        background: linear-gradient(135deg, #feda75 0%, #fa7e1e 25%, #d62976 52%, #962fbf 75%, #4f5bd5 100%);
+        color: #fff;
+    }
+    .home-page .mobile-social-row .tiktok-link {
+        background: #000;
+        color: #fff;
+    }
+    .home-page .mobile-social-row .youtube-link {
+        background: #ff0033;
+        color: #fff;
+    }
+    .home-page .mobile-social-row .pinterest-link {
+        background: #e60023;
+        color: #fff;
+    }
+    .home-page .mobile-social-row .whatsapp-link {
+        background: linear-gradient(135deg, #2fe57e, #1fcb68 52%, #15b95c);
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(31, 188, 92, .28), inset 0 1px 0 rgba(255,255,255,.32), 0 0 0 1px rgba(255,255,255,.16);
+    }
+    .home-page .mobile-social-row .maps-link {
+        background: linear-gradient(135deg, #38bdf8 0%, #2563eb 46%, #1d4ed8 100%);
+        color: #fff;
+        box-shadow: 0 12px 24px rgba(37, 99, 235, .28), inset 0 1px 0 rgba(255,255,255,.32), 0 0 0 1px rgba(255,255,255,.16);
+    }
+    .home-page .mobile-social-row .whatsapp-link svg {
+        width: 20px;
+        height: 20px;
+        margin: 0 auto;
+        transform: translateX(.3px) translateY(.7px) scale(1.02);
+        filter: drop-shadow(0 1px 0 rgba(0,0,0,.12));
+    }
+    .home-page .mobile-social-row .maps-link svg {
+        width: 18px;
+        height: 18px;
+        margin: 0 auto;
+        transform: translateY(1px);
+        filter: drop-shadow(0 1px 0 rgba(0,0,0,.12));
+    }
+    @media (max-width: 480px) {
+        .home-page .hero {
+            display: block;
+            padding-top: 18px;
+            padding-bottom: 30px;
+        }
+        .home-page .hero-copy {
+            width: 100%;
+            padding-bottom: 0;
+        }
+        .home-page .mobile-social-lockup {
+            margin: 0 0 14px;
+        }
+        .home-page .mobile-social-row {
+            gap: 10px;
+        }
+        .home-page .mobile-social-row a {
+            width: 36px;
+            height: 36px;
+        }
+        .home-page .mobile-social-row svg {
+            width: 16px;
+            height: 16px;
+        }
+        .home-page .hero-copy .eyebrow {
+            margin-top: 6px;
+            margin-bottom: 14px;
+        }
+        .home-page .hero-copy h1 {
+            font-size: clamp(52px, 14vw, 70px);
+        }
+    }
     .home-page .sun {
         z-index: 1;
         width: 260px;
@@ -122,10 +262,10 @@
 @endpush
 
 @section('content')
-<section class="hero section-shell"><div class="traffic-field" aria-hidden="true"><i class="traffic-lane lane-one"></i><i class="traffic-lane lane-two"></i><i class="traffic-lane lane-three"></i><i class="traffic-node node-one"></i><i class="traffic-node node-two"></i><i class="traffic-node node-three"></i><i class="traffic-node node-four"></i></div><div class="hero-copy"><p class="eyebrow"><span class="eyebrow-mark">✳</span> Your next move starts here</p><h1>Naik level,<br><em>tanpa ragu.</em></h1><p class="hero-intro">Kami membantu bisnis menemukan arah, tampil lebih berani, dan bergerak lebih cepat di dunia digital.</p><div class="hero-actions"><a class="button button-yellow" href="{{ route('order.form') }}">Pesan sekarang <span>↗</span></a><a class="text-link" href="{{ route('services') }}">Lihat layanan <span>↓</span></a></div></div><div class="hero-art {{ $banners->isNotEmpty() ? 'has-promo-banner' : '' }}" aria-label="Banner promo GASS">@if ($banners->isNotEmpty())<div class="promo-banner-slider" data-promo-slider>@foreach ($banners as $index => $banner)<div class="promo-banner-slide {{ $index === 0 ? 'is-active' : '' }}" data-promo-slide>@if ($banner->media_type === 'video')<video class="promo-banner-media" src="{{ asset('storage/'.$banner->media_path) }}" autoplay muted loop playsinline></video>@else<img class="promo-banner-media" src="{{ asset('storage/'.$banner->media_path) }}" alt="{{ $banner->title }}">@endif<div class="promo-banner-overlay"><h2>{{ $banner->title }}</h2></div></div>@endforeach</div>@endif<div class="art-note note-top">strategy<br><strong>→ growth</strong></div><div class="sun"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="art-label">GROW<br>WITH<br>GASS</div><div class="art-sticker">digital<br>with<br>direction</div><div class="art-note note-bottom">ideas in<br><strong>motion</strong></div>@if ($banners->count() > 1)<div class="promo-banner-dots" aria-label="Navigasi banner promo">@foreach ($banners as $index => $banner)<button class="promo-banner-dot {{ $index === 0 ? 'is-active' : '' }}" type="button" data-promo-dot="{{ $index }}" aria-label="Banner {{ $index + 1 }}" aria-pressed="{{ $index === 0 ? 'true' : 'false' }}"></button>@endforeach</div>@endif</div></section>
+<section class="hero section-shell"><div class="traffic-field" aria-hidden="true"><i class="traffic-lane lane-one"></i><i class="traffic-lane lane-two"></i><i class="traffic-lane lane-three"></i><i class="traffic-node node-one"></i><i class="traffic-node node-two"></i><i class="traffic-node node-three"></i><i class="traffic-node node-four"></i></div><div class="hero-copy"><div class="mobile-social-lockup" aria-label="Ikuti kami di media sosial GASS"><p class="mobile-social-label">Ikuti kami</p><div class="mobile-social-row"><a class="instagram-link" href="https://www.instagram.com/gass.generations/" target="_blank" rel="noreferrer" aria-label="Instagram GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0-3 3Zm5.25-3.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg></a><a class="tiktok-link" href="https://www.tiktok.com/@gass.generations" target="_blank" rel="noreferrer" aria-label="TikTok GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.5 3.5 3.4 3.6v2.8c-1.5.1-2.8-.4-3.9-1.2v6.5a5.3 5.3 0 1 1-5.3-5.3c.3 0 .7 0 1 .1v2.9a2.4 2.4 0 1 0 1.5 2.3V3h3.3Z"/></svg></a><a class="pinterest-link" href="https://pin.it/34Yxkq9r6" target="_blank" rel="noreferrer" aria-label="Pinterest GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.64 19.31c-.09-1.64-.02-3.61.41-5.48l1.05-4.45s-.27-.54-.27-1.33c0-1.25.73-2.18 1.64-2.18.77 0 1.14.58 1.14 1.27 0 .77-.49 1.92-.74 2.99-.21.89.45 1.61 1.33 1.61 1.6 0 2.68-1.68 2.68-4.1 0-2.14-1.54-3.64-3.75-3.64-2.56 0-4.06 1.92-4.06 3.9 0 .77.3 1.6.67 2.05.07.08.08.15.06.24l-.25 1.02c-.04.16-.13.2-.3.12-1.12-.52-1.82-2.13-1.82-3.43 0-2.79 2.03-5.35 5.85-5.35 3.07 0 5.45 2.19 5.45 5.12 0 3.05-1.92 5.51-4.59 5.51-.9 0-1.75-.47-2.04-1.03l-.55 2.1c-.2.77-.74 1.74-1.1 2.33.83.25 1.71.39 2.62.39A10 10 0 0 0 12 2Z"/></svg></a><a class="youtube-link" href="https://youtube.com/@gassdigitalsolutions?si=-HZ9h297EeObAse6" target="_blank" rel="noreferrer" aria-label="YouTube GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 7.5c-.3-1.6-1.5-2.7-3.1-3.1C18.7 4 12 4 12 4s-6.7 0-8.4.4A3.8 3.8 0 0 0 .5 7.5C.1 9.2 0 10.7 0 12s.1 2.8.5 4.5c.3 1.6 1.5 2.7 3.1 3.1 1.7.4 8.4.4 8.4.4s6.7 0 8.4-.4c1.6-.4 2.8-1.5 3.1-3.1.4-1.7.5-3.2.5-4.5s-.1-2.8-.5-4.5ZM9.8 15.6V8.4L16 12l-6.2 3.6Z"/></svg></a><a class="maps-link" href="https://maps.app.goo.gl/hH3uke8PjupxzHUk8" target="_blank" rel="noreferrer" aria-label="Google Maps GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a7.5 7.5 0 0 1 7.5 7.5c0 5.25-7.5 11.5-7.5 11.5S4.5 15.25 4.5 10A7.5 7.5 0 0 1 12 2.5Zm0 3a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/></svg></a><a class="whatsapp-link" href="https://wa.me/6285890007359" target="_blank" rel="noreferrer" aria-label="WhatsApp GASS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.72.45 3.37 1.22 4.82L2 22l5.24-1.2A9.98 9.98 0 1 0 12 2Zm0 18.3a8.28 8.28 0 0 1-4.19-1.15l-.29-.18-3.11.72.76-2.97-.19-.29A8.3 8.3 0 1 1 12 20.3Zm4.6-5.96c-.25-.12-1.46-.72-1.7-.8-.24-.08-.42-.12-.59.13-.17.24-.65.8-.8.96-.15.17-.3.19-.55.07-.24-.12-1.02-.38-1.96-1.22-.74-.66-1.23-1.45-1.37-1.69-.14-.24-.02-.37.11-.49.12-.12.25-.3.38-.46.13-.15.17-.27.26-.43.09-.17.04-.32-.02-.45-.06-.13-.56-1.35-.77-1.84-.2-.48-.41-.41-.58-.42l-.49-.01c-.17 0-.43.06-.66.3-.22.25-.85.84-.85 2.05 0 1.2.87 2.33 1 2.48.13.15 1.7 2.57 4.12 3.57.58.25 1.02.4 1.37.51.58.18 1.11.16 1.53.1.49-.07 1.43-.59 1.64-1.17.2-.57.2-1.05.14-1.15-.06-.1-.22-.16-.46-.29Z"/></svg></a></div></div><p class="eyebrow"><span class="eyebrow-mark">✦</span> Your next move starts here</p><h1>Naik level,<br><em>tanpa ragu.</em></h1><p class="hero-intro">Kami membantu bisnis menemukan arah, tampil lebih berani, dan bergerak lebih cepat di dunia digital.</p><div class="hero-actions"><a class="button button-yellow" href="{{ route('order.form') }}">Pesan sekarang <span>↗</span></a><a class="text-link" href="{{ route('services') }}">Lihat layanan <span>→</span></a></div></div><div class="hero-art {{ $banners->isNotEmpty() ? 'has-promo-banner' : '' }}" aria-label="Banner promo GASS">@if ($banners->isNotEmpty())<div class="promo-banner-slider" data-promo-slider>@foreach ($banners as $index => $banner)<div class="promo-banner-slide {{ $index === 0 ? 'is-active' : '' }}" data-promo-slide>@if ($banner->media_type === 'video')<video class="promo-banner-media" src="{{ asset('storage/'.$banner->media_path) }}" autoplay muted loop playsinline></video>@else<img class="promo-banner-media" src="{{ asset('storage/'.$banner->media_path) }}" alt="{{ $banner->title }}">@endif<div class="promo-banner-overlay"><h2>{{ $banner->title }}</h2></div></div>@endforeach</div>@endif<div class="art-note note-top">strategy<br><strong>→ growth</strong></div><div class="sun"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="art-label">GROW<br>WITH<br>GASS</div><div class="art-sticker">digital<br>with<br>direction</div><div class="art-note note-bottom">ideas in<br><strong>motion</strong></div>@if ($banners->count() > 1)<div class="promo-banner-dots" aria-label="Navigasi banner promo">@foreach ($banners as $index => $banner)<button class="promo-banner-dot {{ $index === 0 ? 'is-active' : '' }}" type="button" data-promo-dot="{{ $index }}" aria-label="Banner {{ $index + 1 }}" aria-pressed="{{ $index === 0 ? 'true' : 'false' }}"></button>@endforeach</div>@endif</div></section>
 <section class="ticker" aria-label="Layanan GASS"><div><span class="ticker-group">WE BUILD <i>✦</i> WE GROW <i>✦</i> WE MOVE <i>✦</i> WE BUILD <i>✦</i> WE GROW <i>✦</i></span><span class="ticker-group" aria-hidden="true">WE BUILD <i>✦</i> WE GROW <i>✦</i> WE MOVE <i>✦</i> WE BUILD <i>✦</i> WE GROW <i>✦</i></span></div></section>
 <section class="home-trust section-shell" aria-label="Kepercayaan klien GASS"><div class="home-trust-item"><span class="home-trust-number">50+</span><span class="home-trust-label">Project Selesai</span></div><div class="home-trust-item"><span class="home-trust-number">20+</span><span class="home-trust-label">Klien Aktif</span></div><div class="home-trust-item"><span class="home-trust-number">95%</span><span class="home-trust-label">Klien Repeat Order</span></div><div class="home-trust-item"><span class="home-trust-number">3 Hari</span><span class="home-trust-label">Rata-rata Pengerjaan Konten</span></div></section>
-<section class="services section-shell"><div class="section-heading"><p class="eyebrow">What we do</p><h2>Satu partner,<br><em>empat cara tumbuh.</em></h2></div><div class="service-grid"><article class="service-card card-pink"><span class="card-number">01</span><span class="card-icon">↗</span><h3>Website<br>yang bekerja</h3><p>Website bukan cuma cantik. Kami rancang agar pengunjung paham, percaya, lalu bergerak.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-yellow"><span class="card-number">02</span><span class="card-icon">✳</span><h3>Konten<br>yang bicara</h3><p>Identitas dan konten yang membuat brand kamu terdengar jelas di tengah keramaian.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-orange"><span class="card-number">03</span><span class="card-icon">◌</span><h3>Sosmed<br>terawat</h3><p>Strategi, kalender, dan eksekusi agar akun sosialmu konsisten dan selalu relevan.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-lilac"><span class="card-number">04</span><span class="card-icon">⌁</span><h3>E-commerce<br>siap jual</h3><p>Dari etalase sampai checkout, kami buat pengalaman belanja yang terasa mudah.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article></div></section>
+<section class="services section-shell"><div class="section-heading"><p class="eyebrow">What we do</p><h2>Satu partner,<br><em>empat cara tumbuh.</em></h2></div><div class="service-grid"><article class="service-card card-pink"><span class="card-number">01</span><span class="card-icon">↗</span><h3>Website<br>yang bekerja</h3><p>Website bukan cuma cantik. Kami rancang agar pengunjung paham, percaya, lalu bergerak.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-yellow"><span class="card-number">02</span><span class="card-icon">✦</span><h3>Konten<br>yang bicara</h3><p>Identitas dan konten yang membuat brand kamu terdengar jelas di tengah keramaian.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-orange"><span class="card-number">03</span><span class="card-icon">◎</span><h3>Sosmed<br>terawat</h3><p>Strategi, kalender, dan eksekusi agar akun sosialmu konsisten dan selalu relevan.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article><article class="service-card card-lilac"><span class="card-number">04</span><span class="card-icon">◫</span><h3>E-commerce<br>siap jual</h3><p>Dari etalase sampai checkout, kami buat pengalaman belanja yang terasa mudah.</p><a href="{{ route('services') }}">Pelajari layanan <span>↗</span></a></article></div></section>
 @if ($galleryItems->isNotEmpty())
 <section class="home-gallery section-shell"><div class="home-gallery-heading"><div><p class="eyebrow">Selected work / 05</p><h2>Gallery<br><em>testimoni.</em></h2></div><p>Beberapa hasil kerja yang kami rancang untuk membuat brand terlihat, terdengar, dan tumbuh lebih jauh.</p></div><div class="home-gallery-grid">@foreach ($galleryItems as $item)<article class="home-gallery-card"><div class="home-gallery-media" data-gallery-slider>@foreach ($item->media as $index => $media)<div class="home-gallery-slide {{ $index === 0 ? 'is-active' : '' }}" data-gallery-slide>@if ($media['type'] === 'video')<video src="{{ asset('storage/'.$media['path']) }}" controls preload="metadata"></video>@else<img src="{{ asset('storage/'.$media['path']) }}" alt="{{ $item->title }} - media {{ $index + 1 }}">@endif</div>@endforeach @if (count($item->media) > 1)<div class="home-gallery-controls"><div class="home-gallery-arrows"><button class="home-gallery-arrow" type="button" data-gallery-prev aria-label="Media sebelumnya">←</button><button class="home-gallery-arrow" type="button" data-gallery-next aria-label="Media berikutnya">→</button></div><div class="home-gallery-dots" aria-label="Pilihan media">@foreach ($item->media as $index => $media)<button class="home-gallery-dot {{ $index === 0 ? 'is-active' : '' }}" type="button" data-gallery-dot="{{ $index }}" aria-label="Media {{ $index + 1 }}"></button>@endforeach</div></div>@endif</div><div class="home-gallery-copy"><h3>{{ $item->title }}</h3>@if ($item->description)<p>{{ $item->description }}</p>@endif</div></article>@endforeach</div></section>
 @endif
@@ -136,11 +276,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const primaryCta = document.querySelector('.hero-actions .button-yellow');
     if (primaryCta) {
         primaryCta.innerHTML = 'Pesan sekarang <span>↗</span>';
-    }
-
-    const heroActions = document.querySelector('.hero-actions');
-    if (heroActions && !document.querySelector('.home-follow')) {
-        heroActions.insertAdjacentHTML('afterend', '<div class="home-follow"><p class="home-follow-label">Ikuti kami</p><div class="home-follow-links"><a class="home-follow-link" href="https://www.instagram.com/gass.generations/" target="_blank" rel="noreferrer" aria-label="Ikuti GASS di Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9a5.5 5.5 0 0 1-5.5 5.5h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0-3 3Zm5.25-3.25a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg></a><a class="home-follow-link" href="https://www.tiktok.com/@gass.generations" target="_blank" rel="noreferrer" aria-label="Ikuti GASS di TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 3c.3 2.2 1.5 3.5 3.4 3.6v2.8c-1.5.1-2.8-.4-3.9-1.2v6.5a5.3 5.3 0 1 1-5.3-5.3c.3 0 .7 0 1 .1v2.9a2.4 2.4 0 1 0 1.5 2.3V3h3.3Z"/></svg></a><a class="home-follow-link" href="https://pin.it/34Yxkq9r6" target="_blank" rel="noreferrer" aria-label="Ikuti GASS di Pinterest"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.64 19.31c-.09-1.64-.02-3.61.41-5.48l1.05-4.45s-.27-.54-.27-1.33c0-1.25.73-2.18 1.64-2.18.77 0 1.14.58 1.14 1.27 0 .77-.49 1.92-.74 2.99-.21.89.45 1.61 1.33 1.61 1.6 0 2.68-1.68 2.68-4.1 0-2.14-1.54-3.64-3.75-3.64-2.56 0-4.06 1.92-4.06 3.9 0 .77.3 1.6.67 2.05.07.08.08.15.06.24l-.25 1.02c-.04.16-.13.2-.3.12-1.12-.52-1.82-2.13-1.82-3.43 0-2.79 2.03-5.35 5.85-5.35 3.07 0 5.45 2.19 5.45 5.12 0 3.05-1.92 5.51-4.59 5.51-.9 0-1.75-.47-2.04-1.03l-.55 2.1c-.2.77-.74 1.74-1.1 2.33.83.25 1.71.39 2.62.39A10 10 0 0 0 12 2Z"/></svg></a><a class="home-follow-link" href="https://youtube.com/@gassdigitalsolutions?si=-HZ9h297EeObAse6" target="_blank" rel="noreferrer" aria-label="Ikuti GASS di YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M23.5 6.2a3 3 0 0 0-2.12-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.58A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.12 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.58a3 3 0 0 0 2.12-2.12A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8ZM9.6 8.5v7l6.2-3.5-6.2-3.5Z"/></svg></a></div></div>');
     }
 
     const setupVideoControls = function (media) {
@@ -162,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
             playButton.setAttribute('aria-label', media.paused ? 'Putar video' : 'Jedaikan video');
         };
         const updateVolumeButton = function () {
-            volumeButton.textContent = media.muted ? '🔇' : '🔊';
+            volumeButton.textContent = media.muted ? '🔊' : '🔉';
             volumeButton.setAttribute('aria-label', media.muted ? 'Aktifkan suara video' : 'Matikan suara video');
         };
         playButton.addEventListener('click', function () {
@@ -315,3 +450,5 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endsection
+
+

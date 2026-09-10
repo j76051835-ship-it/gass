@@ -67,6 +67,54 @@
         color: #f7f9fc;
     }
 
+    .contact-map-card {
+        overflow: hidden;
+        border: 1px solid rgba(103,232,249,.42);
+        border-radius: 16px;
+        background: rgba(5,11,24,.88);
+        box-shadow:
+            12px 12px 0 rgba(34,211,238,.12),
+            0 18px 40px rgba(2,11,31,.28);
+    }
+
+    .contact-map-card .map-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid rgba(103,232,249,.2);
+    }
+
+    .contact-map-card .map-header span,
+    .contact-map-card .map-address span {
+        color: #67e8f9;
+        font: 10px var(--mono);
+        letter-spacing: .12em;
+        text-transform: uppercase;
+    }
+
+    .contact-map-card .map-header strong,
+    .contact-map-card .map-address strong {
+        color: #f7f9fc;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .contact-map-card iframe {
+        display: block;
+        width: 100%;
+        height: 280px;
+        border: 0;
+        filter: saturate(1.15) contrast(1.07) brightness(0.95);
+    }
+
+    .contact-map-card .map-address {
+        display: grid;
+        gap: 8px;
+        padding: 18px 20px 20px;
+    }
+
     .contact-page-body .contact-side {
         position: relative;
         overflow: hidden;
@@ -156,6 +204,15 @@
     /* WHATSAPP */
     .contact-social.whatsapp {
         background: #139447;
+    }
+
+    /* GOOGLE MAPS */
+    .contact-social.maps {
+        background: linear-gradient(
+            145deg,
+            rgba(56, 189, 248, .96),
+            rgba(37, 99, 235, .94)
+        );
     }
 
     /* ICON */
@@ -375,6 +432,23 @@
 
             </a>
 
+            <!-- GOOGLE MAPS -->
+            <a
+                class="contact-social maps"
+                href="https://maps.app.goo.gl/hH3uke8PjupxzHUk8"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GASS di Google Maps"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2.5a7.5 7.5 0 0 1 7.5 7.5c0 5.25-7.5 11.5-7.5 11.5S4.5 15.25 4.5 10A7.5 7.5 0 0 1 12 2.5Zm0 3a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/>
+                </svg>
+                <span>
+                    Maps
+                    <small>↗</small>
+                </span>
+            </a>
+
         </div>
 
 
@@ -395,6 +469,26 @@
             <strong>Indonesia · Remote friendly</strong>
         </div>
 
+    </div>
+
+    <div class="contact-map-card" aria-label="Lokasi kantor GASS">
+        <div class="map-header">
+            <span>Lokasi</span>
+            <strong>Bendungan, Ciawi</strong>
+        </div>
+
+        <iframe
+            title="Lokasi GASS di Bendungan, Ciawi"
+            src="https://www.google.com/maps?q=8VP6%2BWH%20Bendungan%2C%20Bogor%20Regency%2C%20West%20Java&z=15&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+        </iframe>
+
+        <div class="map-address">
+            <span>Alamat</span>
+            <strong>Jl. Raya Pertanian No.88, Bendungan, Kec. Ciawi, Kabupaten Bogor, Jawa Barat 16720</strong>
+        </div>
     </div>
 
 </section>

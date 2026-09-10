@@ -42,7 +42,7 @@
         <div class="loader-progress"><span></span></div>
         <p>GASS <span>/</span> Growth Acceleration Strategic Services</p>
     </div>
-    <div class="announcement">GASS / Growth Acceleration Strategic Services <span>●</span> Jakarta · Indonesia</div>
+    <div class="announcement">GASS / Growth Acceleration Strategic Services <span>●</span> Ciawi, Bogor</div>
     <header class="site-header">
         <a href="{{ auth()->check() && auth()->user()->is_admin ? route('admin.dashboard') : route('admin.login') }}" class="brand" aria-label="{{ auth()->check() && auth()->user()->is_admin ? 'Dashboard admin' : 'Login admin' }}"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><span>Growth Acceleration<br>Strategic Services</span></a>
         <nav class="desktop-nav" aria-label="Navigasi utama">
