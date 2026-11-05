@@ -1062,7 +1062,7 @@
         }
         .hcm-modal[hidden] { display: none; }
         .hcm-modal-dialog {
-            width: min(100%, 480px);
+            width: min(100%, 540px);
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 18px;
@@ -1102,9 +1102,10 @@
         }
         .hcm-camera-frame {
             position: relative;
-            aspect-ratio: 16 / 10;
+            aspect-ratio: 4 / 3;
+            min-height: 340px;
             background: #050a15;
-            border-radius: 12px;
+            border-radius: 14px;
             overflow: hidden;
             border: 1px solid var(--border-color);
             display: grid;
@@ -1340,6 +1341,19 @@
             .hcm-mobile-app-settings {
                 display: grid;
                 gap: 12px;
+            }
+            .hcm-modal {
+                padding: 10px;
+            }
+            .hcm-modal-dialog {
+                width: 100%;
+                padding: 16px;
+                border-radius: 20px;
+            }
+            .hcm-camera-frame {
+                aspect-ratio: 3 / 4;
+                min-height: 380px;
+                max-height: 58vh;
             }
         }
     </style>
@@ -2246,12 +2260,12 @@
                     </button>
                 </div>
 
-                <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:8px 12px;border-radius:9px;background:rgba(9,16,31,0.78);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.14);color:#f8fafc;font-size:11px;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none;">
-                    <div>
-                        <strong style="display:block;color:#2dd4bf;" id="hcm-cam-hud-time">--:--:-- WIB</strong>
-                        <span id="hcm-cam-hud-gps" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#cbd5e1;">GPS: Mendeteksi...</span>
+                <div style="position:absolute;left:8px;right:8px;bottom:8px;padding:6px 10px;border-radius:9px;background:rgba(9,16,31,0.72);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.14);color:#f8fafc;font-size:10.5px;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none;">
+                    <div style="min-width:0;">
+                        <strong style="display:block;color:#2dd4bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" id="hcm-cam-hud-time">--:--:-- WIB</strong>
+                        <span id="hcm-cam-hud-gps" style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#cbd5e1;">GPS: Mendeteksi...</span>
                     </div>
-                    <span id="hcm-cam-hud-badge" style="padding:3px 7px;border-radius:5px;background:rgba(16,185,129,0.2);color:#34d399;font-weight:700;font-size:10px;">LIVE CAMERA</span>
+                    <span id="hcm-cam-hud-badge" style="padding:3px 7px;border-radius:5px;background:rgba(16,185,129,0.2);color:#34d399;font-weight:700;font-size:9.5px;white-space:nowrap;flex-shrink:0;">LIVE CAMERA</span>
                 </div>
             </div>
 
@@ -2781,20 +2795,20 @@
                     currentVideoDeviceIndex = (currentVideoDeviceIndex + 1) % availableVideoDevices.length;
                     const chosenDevice = availableVideoDevices[currentVideoDeviceIndex];
                     mediaStream = await navigator.mediaDevices.getUserMedia({
-                        video: { deviceId: { exact: chosenDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
+                        video: { deviceId: { exact: chosenDevice.deviceId } },
                         audio: false,
                     });
                 } else if (preferNextDevice) {
                     currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
                     videoEl.classList.toggle('is-mirrored', currentFacingMode === 'user');
                     mediaStream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                        video: { facingMode: currentFacingMode },
                         audio: false,
                     });
                 } else {
                     try {
                         mediaStream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                            video: { facingMode: currentFacingMode },
                             audio: false,
                         });
                     } catch {
@@ -2818,7 +2832,7 @@
                                 currentVideoDeviceIndex = realCamIdx;
                                 stopCamera();
                                 mediaStream = await navigator.mediaDevices.getUserMedia({
-                                    video: { deviceId: { exact: availableVideoDevices[realCamIdx].deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
+                                    video: { deviceId: { exact: availableVideoDevices[realCamIdx].deviceId } },
                                     audio: false,
                                 });
                             }
