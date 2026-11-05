@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\GalleryItem;
 use App\Models\PromoBanner;
 use App\Models\ServicePackage;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -23,21 +26,25 @@ class AdminController extends Controller
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required', 'string'],
             'password' => ['required', 'string'],
         ]);
 
-        if (! Auth::attempt($credentials)) {
-            return back()->withErrors(['email' => 'Email atau password tidak sesuai.'])->onlyInput('email');
-        }
+        $loginInput = trim($credentials['email']);
+        $user = User::query()
+            ->whereRaw('LOWER(email) = ?', [mb_strtolower($loginInput)])
+            ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($loginInput)])
+            ->first();
 
-        if (! $request->user()->is_admin) {
-            Auth::logout();
-
-            return back()->withErrors(['email' => 'Akun ini tidak memiliki akses admin.'])->onlyInput('email');
+        if (! $user || ! Auth::attempt(['email' => $user->email, 'password' => $credentials['password']])) {
+            return back()->withErrors(['email' => 'Username/email atau password tidak sesuai.'])->onlyInput('email');
         }
 
         $request->session()->regenerate();
+
+        if (! $request->user()->is_admin) {
+            return redirect()->route('attendance.dashboard');
+        }
 
         return redirect()->intended(route('admin.dashboard'));
     }
@@ -96,6 +103,142 @@ class AdminController extends Controller
     public function gallery(): View
     {
         return view('admin.gallery', ['galleryItems' => GalleryItem::query()->latest()->get()]);
+    }
+
+    public function attendance(Request $request): View
+    {
+        $today = now('Asia/Jakarta')->toDateString();
+        $employees = User::query()
+            ->where('is_admin', false)
+            ->orderBy('name')
+            ->get();
+
+        $query = Attendance::query()->with('user')->orderByDesc('date')->orderByDesc('check_in_time');
+
+        if ($request->filled('date')) {
+            $query->where('date', $request->string('date')->toString());
+        } elseif ($request->filled('month')) {
+            $query->where('date', 'like', $request->string('month')->toString().'%');
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->integer('user_id'));
+        }
+
+        $attendances = $query->limit(150)->get();
+        $todayAttendances = Attendance::query()->where('date', $today)->get();
+
+        return view('admin.attendance', [
+            'employees' => $employees,
+            'attendances' => $attendances,
+            'today' => $today,
+            'todayStats' => [
+                'total_employees' => $employees->count(),
+                'present_today' => $todayAttendances->whereIn('status', ['Hadir', 'Terlambat'])->count(),
+                'on_time_today' => $todayAttendances->where('status', 'Hadir')->count(),
+                'late_today' => $todayAttendances->where('status', 'Terlambat')->count(),
+                'not_checked_in' => max(0, $employees->count() - $todayAttendances->count()),
+            ],
+        ]);
+    }
+
+    public function storeEmployee(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['nullable', 'string', 'max:150'],
+            'password' => ['required', 'string', 'min:6', 'max:100'],
+            'employee_id' => ['nullable', 'string', 'max:50'],
+            'division' => ['nullable', 'string', 'max:100'],
+            'position' => ['nullable', 'string', 'max:100'],
+            'supervisor' => ['nullable', 'string', 'max:120'],
+        ]);
+
+        $rawLogin = trim(($validated['email'] ?? '') ?: $validated['name']);
+        $email = str_contains($rawLogin, '@')
+            ? mb_strtolower($rawLogin)
+            : preg_replace('/[^a-z0-9._-]/', '', mb_strtolower($rawLogin)).'@gass.local';
+
+        if (User::query()->whereRaw('LOWER(email) = ? OR LOWER(name) = ?', [$email, mb_strtolower($validated['name'])])->exists()) {
+            return back()->withErrors(['email' => 'Username atau email karyawan tersebut sudah terdaftar.'])->withInput();
+        }
+
+        $nextNumber = User::query()->where('is_admin', false)->count() + 1;
+
+        User::create([
+            'name' => $validated['name'],
+            'email' => $email,
+            'password' => $validated['password'],
+            'is_admin' => false,
+            'role' => 'karyawan',
+            'employee_id' => ($validated['employee_id'] ?? null) ?: sprintf('EMP-%03d', $nextNumber),
+            'division' => ($validated['division'] ?? null) ?: 'Digital & Creative',
+            'position' => ($validated['position'] ?? null) ?: 'Staff',
+            'supervisor' => ($validated['supervisor'] ?? null) ?: 'Head Departemen',
+        ]);
+
+        return back()->with('status', "Akun karyawan {$validated['name']} berhasil ditambahkan.");
+    }
+
+    public function updateEmployee(Request $request, User $employee): RedirectResponse
+    {
+        abort_if($employee->is_admin, 403);
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:120'],
+            'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($employee->id)],
+            'password' => ['nullable', 'string', 'min:6', 'max:100'],
+            'employee_id' => ['nullable', 'string', 'max:50'],
+            'division' => ['nullable', 'string', 'max:100'],
+            'position' => ['nullable', 'string', 'max:100'],
+            'supervisor' => ['nullable', 'string', 'max:120'],
+        ]);
+
+        $updates = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'employee_id' => ($validated['employee_id'] ?? null) ?: $employee->employee_id,
+            'division' => ($validated['division'] ?? null) ?: $employee->division,
+            'position' => ($validated['position'] ?? null) ?: $employee->position,
+            'supervisor' => ($validated['supervisor'] ?? null) ?: $employee->supervisor,
+        ];
+
+        if (! empty($validated['password'])) {
+            $updates['password'] = $validated['password'];
+        }
+
+        $employee->update($updates);
+
+        return back()->with('status', "Data karyawan {$employee->name} berhasil diperbarui.");
+    }
+
+    public function destroyEmployee(User $employee): RedirectResponse
+    {
+        abort_if($employee->is_admin, 403);
+
+        foreach ($employee->attendances as $attendance) {
+            Storage::disk('public')->delete(array_filter([
+                $attendance->check_in_photo,
+                $attendance->check_out_photo,
+            ]));
+        }
+
+        $name = $employee->name;
+        $employee->delete();
+
+        return back()->with('status', "Akun karyawan {$name} berhasil dihapus.");
+    }
+
+    public function destroyAttendance(Attendance $attendance): RedirectResponse
+    {
+        Storage::disk('public')->delete(array_filter([
+            $attendance->check_in_photo,
+            $attendance->check_out_photo,
+        ]));
+
+        $attendance->delete();
+
+        return back()->with('status', 'Data log absensi berhasil dihapus.');
     }
 
     public function storeGalleryItem(Request $request): RedirectResponse

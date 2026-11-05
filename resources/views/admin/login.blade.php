@@ -21,13 +21,13 @@
 
 @section('content')
 <section class="admin-auth">
-    <p class="eyebrow">GASS / Area terbatas</p>
+    <p class="eyebrow">GASS / Portal Internal</p>
     <h1>Masuk ke dashboard.</h1>
-    <p>Kelola harga layanan dan diskon dari satu tempat.</p>
+    <p>Gunakan akun Admin atau Karyawan untuk mengakses workspace dan sistem absensi GASS.</p>
     @if ($errors->any())<div class="admin-error">{{ $errors->first() }}</div>@endif
     <form method="POST" action="{{ route('admin.authenticate') }}">
         @csrf
-        <label>Email<input type="email" name="email" value="{{ old('email') }}" autocomplete="email" required></label>
+        <label>Username / Email<input type="text" name="email" value="{{ old('email') }}" placeholder="Contoh: Farid atau admin@gass.local" autocomplete="username" required></label>
         <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
         <button type="submit">Masuk ke dashboard →</button>
     </form>

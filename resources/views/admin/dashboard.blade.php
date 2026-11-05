@@ -27,11 +27,12 @@
 @section('content')
 <section class="admin-dashboard">
     <div class="admin-topbar"><div><p class="eyebrow">GASS / Admin</p><h1>Workspace.</h1></div><form method="POST" action="{{ route('admin.logout') }}">@csrf<button class="admin-logout" type="submit">Keluar ↗</button></form></div>
-    <p class="admin-welcome">Kelola tampilan digital GASS dari dua area kerja yang terpisah dan lebih terarah.</p>
+    <p class="admin-welcome">Kelola tampilan digital dan operasional tim GASS dari area kerja yang terpisah dan lebih terarah.</p>
     <nav class="admin-nav" aria-label="Menu admin">
         <a class="admin-nav-card" href="{{ route('admin.prices') }}"><div><small>01 / PRODUK</small><h2>Kontrol harga</h2><p>Atur harga dasar dan persentase diskon seluruh paket layanan.</p></div><strong>Kelola harga →</strong></a>
         <a class="admin-nav-card" href="{{ route('admin.banners') }}"><div><small>02 / PROMO</small><h2>Kontrol banner</h2><p>Tambah, ubah, aktifkan, atau hapus banner foto dan video di beranda.</p></div><strong>Kelola banner →</strong></a>
         <a class="admin-nav-card" href="{{ route('admin.gallery') }}"><div><small>03 / PORTOFOLIO</small><h2>Galeri karya</h2><p>Kelola foto, video, dan carousel karya yang tampil di beranda.</p></div><strong>Kelola galeri →</strong></a>
+        <a class="admin-nav-card" href="{{ route('admin.attendance') }}"><div><small>04 / ABSENSI</small><h2>Absensi karyawan</h2><p>Pantau jam masuk, jam pulang, lokasi GPS, foto bukti, dan kelola akun karyawan.</p></div><strong>Kelola absensi →</strong></a>
     </nav>
 </section>
 @endsection

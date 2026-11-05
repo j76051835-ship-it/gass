@@ -44,7 +44,7 @@
     </div>
     <div class="announcement">GASS / Growth Acceleration Strategic Services <span>●</span> Ciawi, Bogor</div>
     <header class="site-header">
-        <a href="{{ auth()->check() && auth()->user()->is_admin ? route('admin.dashboard') : route('admin.login') }}" class="brand" aria-label="{{ auth()->check() && auth()->user()->is_admin ? 'Dashboard admin' : 'Login admin' }}"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><span>Growth Acceleration<br>Strategic Services</span></a>
+        <a href="{{ auth()->check() ? (auth()->user()->is_admin ? route('admin.dashboard') : route('attendance.dashboard')) : route('admin.login') }}" class="brand" aria-label="{{ auth()->check() ? (auth()->user()->is_admin ? 'Dashboard admin' : 'Dashboard absensi') : 'Login admin' }}"><img src="{{ asset('LOGO GASS LANDSCAPE.png') }}" alt="GASS"><span>Growth Acceleration<br>Strategic Services</span></a>
         <nav class="desktop-nav" aria-label="Navigasi utama">
             <a class="nav-link {{ request()->routeIs('home') ? 'is-active' : '' }}" href="{{ route('home') }}"><small>00</small>Beranda</a>
             <a class="nav-link {{ request()->routeIs('about') ? 'is-active' : '' }}" href="{{ route('about') }}"><small>01</small>Tentang</a>

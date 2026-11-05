@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
+        $middleware->redirectGuestsTo(fn (): string => route('admin.login'));
         $middleware->throttleApi();
         $middleware->validateCsrfTokens(except: ['payment/midtrans/webhook']);
     })

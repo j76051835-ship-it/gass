@@ -32,7 +32,30 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin GASS',
             'password' => 'password',
             'is_admin' => true,
+            'role' => 'admin',
+            'employee_id' => 'ADM-001',
+            'division' => 'Management',
+            'position' => 'Administrator',
         ]);
+
+        User::query()->where('email', 'karyawan@gass.local')->delete();
+
+        $employees = [
+            ['name' => 'Farid', 'email' => 'farid@gass.local', 'employee_id' => 'EMP-001', 'division' => 'IT & Digital', 'position' => 'Staff IT'],
+            ['name' => 'Ali', 'email' => 'ali@gass.local', 'employee_id' => 'EMP-002', 'division' => 'Creative & AI', 'position' => 'Creative Specialist'],
+            ['name' => 'Davin', 'email' => 'davin@gass.local', 'employee_id' => 'EMP-003', 'division' => 'Creative & AI', 'position' => 'AI Video Producer'],
+            ['name' => 'Albian', 'email' => 'albian@gass.local', 'employee_id' => 'EMP-004', 'division' => 'Web & System', 'position' => 'Web Developer'],
+            ['name' => 'Iren', 'email' => 'iren@gass.local', 'employee_id' => 'EMP-005', 'division' => 'Social Media', 'position' => 'Social Media Specialist'],
+        ];
+
+        foreach ($employees as $employee) {
+            User::updateOrCreate(['email' => $employee['email']], $employee + [
+                'password' => 'user123',
+                'is_admin' => false,
+                'role' => 'karyawan',
+                'supervisor' => 'Head Departemen',
+            ]);
+        }
 
         $packages = [
             ['slug' => 'pembuatan-website-basic', 'name' => 'Pembuatan Website Basic', 'base_price' => 3500000],

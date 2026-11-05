@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AI\GassAIController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\MidtransPaymentController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ReviewController;
@@ -50,12 +51,26 @@ Route::delete('/ulasan/{review}', [ReviewController::class, 'destroy'])->name('r
 
 Route::get('/admin/login', [AdminController::class, 'login'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'authenticate'])->name('admin.authenticate');
+
+Route::middleware('auth')->prefix('absensi')->name('attendance.')->group(function () {
+    Route::get('/', [AttendanceController::class, 'dashboard'])->name('dashboard');
+    Route::post('/action', [AttendanceController::class, 'action'])->name('action');
+    Route::post('/profile', [AttendanceController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/password', [AttendanceController::class, 'updatePassword'])->name('password.update');
+    Route::post('/logout', [AttendanceController::class, 'logout'])->name('logout');
+});
+
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/harga', [AdminController::class, 'prices'])->name('prices');
     Route::patch('/harga', [AdminController::class, 'updatePackages'])->name('packages.bulk-update');
     Route::get('/banner', [AdminController::class, 'banners'])->name('banners');
     Route::get('/galeri', [AdminController::class, 'gallery'])->name('gallery');
+    Route::get('/absensi', [AdminController::class, 'attendance'])->name('attendance');
+    Route::post('/karyawan', [AdminController::class, 'storeEmployee'])->name('employees.store');
+    Route::patch('/karyawan/{employee}', [AdminController::class, 'updateEmployee'])->name('employees.update');
+    Route::delete('/karyawan/{employee}', [AdminController::class, 'destroyEmployee'])->name('employees.destroy');
+    Route::delete('/absensi/{attendance}', [AdminController::class, 'destroyAttendance'])->name('attendance.destroy');
     Route::patch('/paket/{package}', [AdminController::class, 'updatePackage'])->name('packages.update');
     Route::post('/banner', [AdminController::class, 'storeBanner'])->name('banners.store');
     Route::patch('/banner/{banner}', [AdminController::class, 'updateBanner'])->name('banners.update');
