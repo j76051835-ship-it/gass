@@ -27,8 +27,8 @@
     @if ($errors->any())<div class="admin-error">{{ $errors->first() }}</div>@endif
     <form method="POST" action="{{ route('admin.authenticate') }}">
         @csrf
-        <label>Username / Email<input type="text" name="email" value="{{ old('email') }}" placeholder="Contoh: Farid atau admin@gass.local" autocomplete="username" required></label>
-        <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+        <label>Username / Email<input type="text" name="email" value="{{ old('email') }}" placeholder="Masukkan username atau email" autocomplete="username" required></label>
+        <label>Password<input type="password" name="password" placeholder="Masukkan password" autocomplete="current-password" required></label>
         <button type="submit">Masuk ke dashboard →</button>
     </form>
 </section>

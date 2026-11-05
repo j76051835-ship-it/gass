@@ -273,7 +273,7 @@
             <div class="admin-form-grid">
                 <label>
                     Username / Nama Karyawan *
-                    <input type="text" name="name" placeholder="Contoh: Farid" required>
+                    <input type="text" name="name" placeholder="Masukkan nama / username" required>
                 </label>
                 <label>
                     Email (Opsional)
