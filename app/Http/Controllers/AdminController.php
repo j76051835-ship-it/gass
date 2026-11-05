@@ -125,8 +125,14 @@ class AdminController extends Controller
             $query->where('user_id', $request->integer('user_id'));
         }
 
+        Attendance::query()
+            ->where('status', 'Terlambat')
+            ->update(['status' => 'Hadir']);
+
         $attendances = $query->limit(150)->get();
         $todayAttendances = Attendance::query()->where('date', $today)->get();
+        $shiftPagiToday = $todayAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Pagi')->count();
+        $shiftSoreToday = $todayAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Sore')->count();
 
         return view('admin.attendance', [
             'employees' => $employees,
@@ -134,9 +140,11 @@ class AdminController extends Controller
             'today' => $today,
             'todayStats' => [
                 'total_employees' => $employees->count(),
-                'present_today' => $todayAttendances->whereIn('status', ['Hadir', 'Terlambat'])->count(),
+                'present_today' => $todayAttendances->where('status', 'Hadir')->count(),
                 'on_time_today' => $todayAttendances->where('status', 'Hadir')->count(),
-                'late_today' => $todayAttendances->where('status', 'Terlambat')->count(),
+                'late_today' => 0,
+                'shift_pagi_today' => $shiftPagiToday,
+                'shift_sore_today' => $shiftSoreToday,
                 'not_checked_in' => max(0, $employees->count() - $todayAttendances->count()),
             ],
         ]);

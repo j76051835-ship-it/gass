@@ -73,6 +73,8 @@ it('records check-in and check-out with selfie photo, gps coordinates, and time'
 
     $attendance = Attendance::firstOrFail();
     expect($attendance->user_id)->toBe($employee->id)
+        ->and($attendance->status)->toBe('Hadir')
+        ->and($attendance->shift_label)->toBeIn(['Shift Pagi', 'Shift Sore'])
         ->and($attendance->check_in_time)->not->toBeNull()
         ->and($attendance->check_in_lat)->toBe(-6.658412)
         ->and($attendance->check_in_lng)->toBe(106.848612)

@@ -1097,10 +1097,13 @@
             display: grid;
             place-items: center;
         }
+        [hidden] {
+            display: none !important;
+        }
         .hcm-camera-frame {
             position: relative;
             aspect-ratio: 16 / 10;
-            background: #000;
+            background: #050a15;
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -1111,10 +1114,32 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
-        .hcm-camera-frame video {
+        .hcm-camera-frame video.is-mirrored {
             transform: scaleX(-1);
         }
+        .hcm-cam-viewfinder {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+        }
+        .hcm-cam-corner {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-color: rgba(45, 212, 191, 0.75);
+            border-style: solid;
+            pointer-events: none;
+        }
+        .hcm-cam-corner.tl { top: 14px; left: 14px; border-width: 2.5px 0 0 2.5px; border-top-left-radius: 6px; }
+        .hcm-cam-corner.tr { top: 14px; right: 14px; border-width: 2.5px 2.5px 0 0; border-top-right-radius: 6px; }
+        .hcm-cam-corner.bl { bottom: 58px; left: 14px; border-width: 0 0 2.5px 2.5px; border-bottom-left-radius: 6px; }
+        .hcm-cam-corner.br { bottom: 58px; right: 14px; border-width: 0 2.5px 2.5px 0; border-bottom-right-radius: 6px; }
         .hcm-gps-bar {
             margin-top: 12px;
             padding: 10px 12px;
@@ -1460,9 +1485,9 @@
                         <div>
                             <div class="hcm-status-line">
                                 @if ($hasCheckOut)
-                                    <span class="hcm-status-pill is-done"><i></i> Absensi Selesai</span>
+                                    <span class="hcm-status-pill is-done"><i></i> Absensi Selesai • {{ $todayAttendance->shift_label }}</span>
                                 @elseif ($hasCheckIn)
-                                    <span class="hcm-status-pill is-working"><i></i> Sedang Bertugas ({{ $todayAttendance->status }})</span>
+                                    <span class="hcm-status-pill is-working"><i></i> Sedang Bertugas ({{ $todayAttendance->shift_label }})</span>
                                 @else
                                     <span class="hcm-status-pill"><i></i> Belum Absensi Masuk</span>
                                 @endif
@@ -1480,12 +1505,13 @@
                             </h2>
 
                             <div class="hcm-time-pills">
+                                <span>Shift: <code>{{ $todayAttendance?->shift_label !== '-' && $todayAttendance?->shift_label ? $todayAttendance->shift_label : ($now->format('H:i') < '13:30' ? 'Shift Pagi' : 'Shift Sore') }}</code></span>
                                 <span>Masuk: <code id="hcm-today-in">{{ $todayAttendance?->check_in_time ? substr($todayAttendance->check_in_time, 0, 5) : '--:--' }}</code></span>
                                 <span>Pulang: <code id="hcm-today-out">{{ $todayAttendance?->check_out_time ? substr($todayAttendance->check_out_time, 0, 5) : '--:--' }}</code></span>
                                 <span>Durasi: <code class="is-duration" id="hcm-today-duration" data-checkin="{{ $todayAttendance?->check_in_time }}" data-checkout="{{ $todayAttendance?->check_out_time }}">{{ $todayAttendance?->work_duration ?? '--:--' }}</code></span>
                             </div>
 
-                            <p class="hcm-operational-note">Jam Operasional: 08:30 - 17:30 WIB • Memerlukan GPS &amp; verifikasi kamera</p>
+                            <p class="hcm-operational-note">Shift Otomatis: Shift Pagi (09:00 WIB) &amp; Shift Sore (16:00 WIB) • Dihitung per jam (GPS &amp; Kamera)</p>
                         </div>
 
                         <div class="hcm-action-buttons">
@@ -1527,9 +1553,9 @@
                             <div class="hcm-stat-value">{{ $stats['present'] }} <small>Hari Hadir</small></div>
                         </div>
                         <div class="hcm-mini-badges">
-                            <span class="hcm-mini-badge emerald">{{ $stats['on_time'] }} Tepat</span>
-                            <span class="hcm-mini-badge amber">{{ $stats['late'] }} Telat</span>
-                            <span class="hcm-mini-badge rose">{{ $stats['alpha'] }} Alpha</span>
+                            <span class="hcm-mini-badge emerald">{{ $stats['shift_pagi'] }} Pagi</span>
+                            <span class="hcm-mini-badge amber">{{ $stats['shift_sore'] }} Sore</span>
+                            <span class="hcm-mini-badge rose" style="background:rgba(59,130,246,0.14);color:#60a5fa;">{{ $stats['total_duration'] }}</span>
                         </div>
                     </article>
 
@@ -1545,12 +1571,12 @@
                                 @if ($hasCheckOut)
                                     <span class="hcm-status-tag hadir">
                                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                        <span>Selesai Bekerja</span>
+                                        <span>Selesai • {{ $todayAttendance->work_duration }}</span>
                                     </span>
                                 @elseif ($hasCheckIn)
-                                    <span class="hcm-status-tag {{ $todayAttendance->status === 'Terlambat' ? 'terlambat' : 'hadir' }}">
+                                    <span class="hcm-status-tag hadir">
                                         <span style="width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;"></span>
-                                        <span>{{ $todayAttendance->status }} ({{ substr($todayAttendance->check_in_time, 0, 5) }})</span>
+                                        <span>{{ $todayAttendance->shift_label }} ({{ substr($todayAttendance->check_in_time, 0, 5) }})</span>
                                     </span>
                                 @else
                                     <span class="hcm-status-tag terlambat">
@@ -1561,7 +1587,7 @@
                             </div>
                         </div>
                         <div class="hcm-stat-foot">
-                            <span>Skema: Harian</span>
+                            <span>Skema: Shift Per Jam</span>
                             <span style="color:var(--accent-teal);font-weight:600;display:inline-flex;align-items:center;gap:3px;">
                                 <span>WIB</span>
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
@@ -1583,7 +1609,7 @@
                             </div>
                         </div>
                         <div class="hcm-stat-foot">
-                            <span>Tepat Waktu: <strong>{{ $stats['score'] }}%</strong></span>
+                            <span>Total Jam: <strong>{{ $stats['total_duration'] }}</strong></span>
                             <span>Bulan: <strong>{{ $now->format('m/Y') }}</strong></span>
                         </div>
                     </article>
@@ -1643,8 +1669,8 @@
                                             <td class="hcm-mono">{{ $log->check_in_time ?? '-' }}</td>
                                             <td class="hcm-mono">{{ $log->check_out_time ?? '-' }}</td>
                                             <td>
-                                                <span class="hcm-status-tag {{ strtolower($log->status) === 'terlambat' ? 'terlambat' : 'hadir' }}">
-                                                    {{ $log->status }}
+                                                <span class="hcm-status-tag hadir">
+                                                    {{ $log->status }} • {{ $log->shift_label }}
                                                 </span>
                                             </td>
                                             <td>
@@ -1778,16 +1804,16 @@
                         <div class="hcm-hist-stat-num"><span id="hcm-hist-stat-present">{{ $stats['present'] }}</span> <small>Hari</small></div>
                     </div>
                     <div class="hcm-hist-stat-card">
-                        <div class="hcm-hist-stat-label">Tingkat Tepat Waktu</div>
-                        <div class="hcm-hist-stat-num" style="color:#34d399;"><span id="hcm-hist-stat-rate">{{ $stats['score'] }}</span>%</div>
+                        <div class="hcm-hist-stat-label">Shift Pagi (09:00)</div>
+                        <div class="hcm-hist-stat-num" style="color:#34d399;"><span id="hcm-hist-stat-pagi">{{ $stats['shift_pagi'] }}</span> <small>Hari</small></div>
                     </div>
                     <div class="hcm-hist-stat-card">
-                        <div class="hcm-hist-stat-label">Total Terlambat</div>
-                        <div class="hcm-hist-stat-num" style="color:#fbbf24;"><span id="hcm-hist-stat-late">{{ $stats['late'] }}</span> <small>Hari</small></div>
+                        <div class="hcm-hist-stat-label">Shift Sore (16:00)</div>
+                        <div class="hcm-hist-stat-num" style="color:#fbbf24;"><span id="hcm-hist-stat-sore">{{ $stats['shift_sore'] }}</span> <small>Hari</small></div>
                     </div>
                     <div class="hcm-hist-stat-card">
-                        <div class="hcm-hist-stat-label">Izin / Sakit / Alpha</div>
-                        <div class="hcm-hist-stat-num" style="color:#fb7185;"><span id="hcm-hist-stat-alpha">{{ $stats['alpha'] }}</span> <small>Hari</small></div>
+                        <div class="hcm-hist-stat-label">Total Jam Kerja</div>
+                        <div class="hcm-hist-stat-num" style="color:#60a5fa;"><span id="hcm-hist-stat-hours">{{ $stats['total_duration'] }}</span></div>
                     </div>
                 </section>
 
@@ -1813,12 +1839,10 @@
                             @endforeach
                         </select>
 
-                        <select class="hcm-select" id="hcm-filter-status" aria-label="Pilih Status">
-                            <option value="all">Semua Status</option>
-                            <option value="Hadir">Hadir (Tepat Waktu)</option>
-                            <option value="Terlambat">Terlambat</option>
-                            <option value="Izin">Izin / Sakit</option>
-                            <option value="Alpha">Alpha</option>
+                        <select class="hcm-select" id="hcm-filter-status" aria-label="Pilih Shift">
+                            <option value="all">Semua Shift</option>
+                            <option value="Shift Pagi">Shift Pagi (09:00)</option>
+                            <option value="Shift Sore">Shift Sore (16:00)</option>
                         </select>
 
                         <select class="hcm-select" id="hcm-filter-sort" aria-label="Urutan">
@@ -1856,7 +1880,7 @@
                                     <th>Jam Masuk</th>
                                     <th>Jam Pulang</th>
                                     <th>Durasi</th>
-                                    <th>Status</th>
+                                    <th>Status &amp; Shift</th>
                                     <th>Lokasi GPS</th>
                                     <th style="text-align:right;">Foto Bukti</th>
                                 </tr>
@@ -1872,14 +1896,16 @@
                                         data-month="{{ (int) $logDateObj->format('n') }}"
                                         data-year="{{ (int) $logDateObj->format('Y') }}"
                                         data-status="{{ $log->status }}"
+                                        data-shift="{{ $log->shift_label }}"
+                                        data-minutes="{{ $log->work_minutes }}"
                                     >
                                         <td style="font-weight:600;">{{ $log->date }}</td>
                                         <td class="hcm-mono">{{ $log->check_in_time ?? '-' }}</td>
                                         <td class="hcm-mono">{{ $log->check_out_time ?? '-' }}</td>
                                         <td class="hcm-mono">{{ $log->work_duration }}</td>
                                         <td>
-                                            <span class="hcm-status-tag {{ strtolower($log->status) === 'terlambat' ? 'terlambat' : 'hadir' }}">
-                                                {{ $log->status }}
+                                            <span class="hcm-status-tag hadir">
+                                                {{ $log->status }} • {{ $log->shift_label }}
                                             </span>
                                         </td>
                                         <td>
@@ -2205,17 +2231,21 @@
             </div>
 
             <div class="hcm-camera-frame">
-                <video id="hcm-camera-video" autoplay playsinline muted></video>
+                <video id="hcm-camera-video" class="is-mirrored" autoplay playsinline muted></video>
                 <img id="hcm-camera-preview" alt="Preview foto absensi" hidden>
-                <div id="hcm-camera-fallback-ui" hidden style="position:absolute;inset:0;background:radial-gradient(circle at 50% 25%, #172b4d 0%, #091224 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 24px 66px;text-align:center;">
-                    <div style="width:62px;height:62px;border-radius:18px;background:linear-gradient(135deg,rgba(20,184,166,0.22),rgba(37,99,235,0.25));border:1.5px solid rgba(45,212,191,0.45);display:grid;place-items:center;color:#2dd4bf;font-size:20px;font-weight:800;margin-bottom:10px;box-shadow:0 10px 25px rgba(13,148,136,0.2);">
-                        {{ $user->initials }}
-                    </div>
-                    <div style="font-size:14px;font-weight:700;color:#f8fafc;margin-bottom:4px;">Kamera Perangkat Tidak Tersedia</div>
-                    <div style="font-size:11.5px;color:#94a3b8;max-width:310px;line-height:1.45;">
-                        Sistem otomatis membuat <strong style="color:#2dd4bf;">Kartu Bukti Presensi Digital</strong> dengan titik koordinat GPS &amp; waktu WIB.
-                    </div>
+
+                <span class="hcm-cam-corner tl"></span>
+                <span class="hcm-cam-corner tr"></span>
+                <span class="hcm-cam-corner bl"></span>
+                <span class="hcm-cam-corner br"></span>
+
+                <div style="position:absolute;top:12px;right:12px;z-index:2;display:flex;gap:6px;">
+                    <button type="button" id="hcm-switch-camera" title="Ganti / Muat Ulang Kamera" style="padding:5px 10px;border-radius:8px;background:rgba(9,16,31,0.72);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.16);color:#e2e8f0;font-size:11px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                        <span>Kamera</span>
+                    </button>
                 </div>
+
                 <div style="position:absolute;left:10px;right:10px;bottom:10px;padding:8px 12px;border-radius:9px;background:rgba(9,16,31,0.78);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.14);color:#f8fafc;font-size:11px;display:flex;justify-content:space-between;align-items:center;gap:8px;pointer-events:none;">
                     <div>
                         <strong style="display:block;color:#2dd4bf;" id="hcm-cam-hud-time">--:--:-- WIB</strong>
@@ -2463,18 +2493,22 @@
             const periodRows = rows.filter((row) => Number(row.dataset.month) === selectedMonth && Number(row.dataset.year) === selectedYear);
 
             // Update 4 period stat cards based on selected month & year
-            const onTimeCount = periodRows.filter((r) => r.dataset.status === 'Hadir').length;
-            const lateCount = periodRows.filter((r) => r.dataset.status === 'Terlambat').length;
-            const alphaCount = periodRows.filter((r) => ['Izin', 'Sakit', 'Alpha'].includes(r.dataset.status)).length;
-            const presentCount = onTimeCount + lateCount;
-            const rate = presentCount > 0 ? Math.round((onTimeCount / presentCount) * 100) : 100;
+            const presentCount = periodRows.length;
+            const pagiCount = periodRows.filter((r) => r.dataset.shift === 'Shift Pagi').length;
+            const soreCount = periodRows.filter((r) => r.dataset.shift === 'Shift Sore').length;
+            const totalMin = periodRows.reduce((acc, r) => acc + Number(r.dataset.minutes || 0), 0);
+            const totalDurStr = `${Math.floor(totalMin / 60)}j ${totalMin % 60}m`;
 
-            document.getElementById('hcm-hist-stat-present').textContent = String(presentCount);
-            document.getElementById('hcm-hist-stat-rate').textContent = String(rate);
-            document.getElementById('hcm-hist-stat-late').textContent = String(lateCount);
-            document.getElementById('hcm-hist-stat-alpha').textContent = String(alphaCount);
+            const elPresent = document.getElementById('hcm-hist-stat-present');
+            const elPagi = document.getElementById('hcm-hist-stat-pagi');
+            const elSore = document.getElementById('hcm-hist-stat-sore');
+            const elHours = document.getElementById('hcm-hist-stat-hours');
+            if (elPresent) elPresent.textContent = String(presentCount);
+            if (elPagi) elPagi.textContent = String(pagiCount);
+            if (elSore) elSore.textContent = String(soreCount);
+            if (elHours) elHours.textContent = totalDurStr;
 
-            const visibleRows = periodRows.filter((row) => selectedStatus === 'all' || row.dataset.status === selectedStatus);
+            const visibleRows = periodRows.filter((row) => selectedStatus === 'all' || row.dataset.shift === selectedStatus || row.dataset.status === selectedStatus);
 
             rows.forEach((row) => { row.hidden = true; });
 
@@ -2725,64 +2759,94 @@
 
         document.getElementById('hcm-retry-gps')?.addEventListener('click', detectGPS);
 
+        let availableVideoDevices = [];
+        let currentVideoDeviceIndex = 0;
+        let currentFacingMode = 'user';
+
+        const startCameraStream = async (preferNextDevice = false) => {
+            const hudBadge = document.getElementById('hcm-cam-hud-badge');
+            if (hudBadge) {
+                hudBadge.textContent = 'LIVE CAMERA';
+                hudBadge.style.background = 'rgba(16,185,129,0.2)';
+                hudBadge.style.color = '#34d399';
+            }
+
+            try {
+                stopCamera();
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('No camera API');
+                }
+
+                if (preferNextDevice && availableVideoDevices.length > 1) {
+                    currentVideoDeviceIndex = (currentVideoDeviceIndex + 1) % availableVideoDevices.length;
+                    const chosenDevice = availableVideoDevices[currentVideoDeviceIndex];
+                    mediaStream = await navigator.mediaDevices.getUserMedia({
+                        video: { deviceId: { exact: chosenDevice.deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
+                        audio: false,
+                    });
+                } else if (preferNextDevice) {
+                    currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+                    videoEl.classList.toggle('is-mirrored', currentFacingMode === 'user');
+                    mediaStream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                        audio: false,
+                    });
+                } else {
+                    try {
+                        mediaStream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+                            audio: false,
+                        });
+                    } catch {
+                        mediaStream = await navigator.mediaDevices.getUserMedia({
+                            video: true,
+                            audio: false,
+                        });
+                    }
+
+                    if (navigator.mediaDevices.enumerateDevices) {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        availableVideoDevices = devices.filter((d) => d.kind === 'videoinput');
+                        const activeTrack = mediaStream.getVideoTracks()[0];
+                        const activeLabel = (activeTrack?.label || '').toLowerCase();
+                        if (availableVideoDevices.length > 1 && (activeLabel.includes('virtual') || activeLabel.includes('obs'))) {
+                            const realCamIdx = availableVideoDevices.findIndex((d) => {
+                                const lbl = (d.label || '').toLowerCase();
+                                return !lbl.includes('virtual') && !lbl.includes('obs');
+                            });
+                            if (realCamIdx !== -1) {
+                                currentVideoDeviceIndex = realCamIdx;
+                                stopCamera();
+                                mediaStream = await navigator.mediaDevices.getUserMedia({
+                                    video: { deviceId: { exact: availableVideoDevices[realCamIdx].deviceId }, width: { ideal: 1280 }, height: { ideal: 720 } },
+                                    audio: false,
+                                });
+                            }
+                        }
+                    }
+                }
+
+                videoEl.srcObject = mediaStream;
+                await videoEl.play().catch(() => {});
+            } catch {
+                // Keep camera frame clean as requested
+            }
+        };
+
+        document.getElementById('hcm-switch-camera')?.addEventListener('click', () => {
+            startCameraStream(true);
+        });
+
         const openAttendanceModal = async (action) => {
             if (!action) return;
             currentAction = action;
             customPhotoDataUrl = null;
             previewEl.hidden = true;
             videoEl.hidden = false;
-            const fallbackUi = document.getElementById('hcm-camera-fallback-ui');
-            const hudBadge = document.getElementById('hcm-cam-hud-badge');
-            if (fallbackUi) fallbackUi.hidden = true;
-            if (hudBadge) {
-                hudBadge.textContent = 'LIVE CAMERA';
-                hudBadge.style.background = 'rgba(16,185,129,0.2)';
-                hudBadge.style.color = '#34d399';
-            }
             modalTitle.textContent = action === 'checkin' ? 'Foto Absensi Masuk' : 'Foto Absensi Pulang';
             attendanceModal.hidden = false;
             detectGPS();
-
-            try {
-                stopCamera();
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    mediaStream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
-                        audio: false,
-                    });
-                    videoEl.srcObject = mediaStream;
-                    setTimeout(() => {
-                        if (!attendanceModal.hidden && mediaStream) {
-                            const probe = document.createElement('canvas');
-                            probe.width = 160;
-                            probe.height = 120;
-                            const pCtx = probe.getContext('2d');
-                            if (!videoEl.videoWidth) {
-                                if (fallbackUi) fallbackUi.hidden = false;
-                            } else {
-                                pCtx.drawImage(videoEl, 0, 0, 160, 120);
-                                if (isCanvasMostlyBlankOrLegacy(pCtx, 160, 120)) {
-                                    if (fallbackUi) fallbackUi.hidden = false;
-                                    if (hudBadge) {
-                                        hudBadge.textContent = 'DIGITAL GPS CARD';
-                                        hudBadge.style.background = 'rgba(59,130,246,0.22)';
-                                        hudBadge.style.color = '#60a5fa';
-                                    }
-                                }
-                            }
-                        }
-                    }, 800);
-                } else {
-                    throw new Error('No camera API');
-                }
-            } catch {
-                if (fallbackUi) fallbackUi.hidden = false;
-                if (hudBadge) {
-                    hudBadge.textContent = 'DIGITAL GPS CARD';
-                    hudBadge.style.background = 'rgba(59,130,246,0.22)';
-                    hudBadge.style.color = '#60a5fa';
-                }
-            }
+            await startCameraStream(false);
         };
 
         const closeAttendanceModal = () => {

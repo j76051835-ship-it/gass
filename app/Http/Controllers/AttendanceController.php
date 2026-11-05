@@ -24,6 +24,11 @@ class AttendanceController extends Controller
         $today = $now->toDateString();
         $currentMonthPrefix = $now->format('Y-m');
 
+        Attendance::query()
+            ->where('user_id', $user->id)
+            ->where('status', 'Terlambat')
+            ->update(['status' => 'Hadir']);
+
         $attendances = Attendance::query()
             ->where('user_id', $user->id)
             ->orderByDesc('date')
@@ -35,12 +40,14 @@ class AttendanceController extends Controller
             fn (Attendance $item): bool => str_starts_with($item->date, $currentMonthPrefix)
         );
 
-        $onTimeCount = $monthlyAttendances->where('status', 'Hadir')->count();
-        $lateCount = $monthlyAttendances->where('status', 'Terlambat')->count();
+        $presentCount = $monthlyAttendances->where('status', 'Hadir')->count();
         $alphaCount = $monthlyAttendances->where('status', 'Alpha')->count();
-        $presentCount = $onTimeCount + $lateCount;
-        $attendanceScore = $presentCount > 0 ? (int) round(($onTimeCount / $presentCount) * 100) : 100;
-        $grade = $attendanceScore >= 90 ? 'Grade A' : ($attendanceScore >= 75 ? 'Grade B' : 'Grade C');
+        $shiftPagiCount = $monthlyAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Pagi')->count();
+        $shiftSoreCount = $monthlyAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Sore')->count();
+        $totalMinutes = (int) $monthlyAttendances->sum(fn (Attendance $item): int => $item->work_minutes);
+        $totalDuration = intdiv($totalMinutes, 60).'j '.($totalMinutes % 60).'m';
+        $attendanceScore = 100;
+        $grade = 'Grade A';
 
         return view('attendance.dashboard', [
             'user' => $user,
@@ -50,9 +57,12 @@ class AttendanceController extends Controller
             'attendances' => $attendances,
             'stats' => [
                 'present' => $presentCount,
-                'on_time' => $onTimeCount,
-                'late' => $lateCount,
+                'on_time' => $presentCount,
+                'late' => 0,
                 'alpha' => $alphaCount,
+                'shift_pagi' => $shiftPagiCount,
+                'shift_sore' => $shiftSoreCount,
+                'total_duration' => $totalDuration,
                 'score' => $attendanceScore,
                 'grade' => $grade,
             ],
@@ -91,7 +101,8 @@ class AttendanceController extends Controller
                 return $this->errorResponse($request, 'Format foto selfie tidak valid.');
             }
 
-            $status = $currentTime > '08:30:00' ? 'Terlambat' : 'Hadir';
+            $status = 'Hadir';
+            $shiftLabel = $currentTime < '13:30:00' ? 'Shift Pagi' : 'Shift Sore';
 
             $attendance = Attendance::updateOrCreate(
                 ['user_id' => $user->id, 'date' => $today],
@@ -101,11 +112,11 @@ class AttendanceController extends Controller
                     'check_in_lat' => $validated['latitude'],
                     'check_in_lng' => $validated['longitude'],
                     'check_in_photo' => $photoPath,
-                    'notes' => $validated['notes'] ?? null,
+                    'notes' => $validated['notes'] ?? $shiftLabel,
                 ]
             );
 
-            return $this->successResponse($request, "Absensi Masuk berhasil dicatat pada {$currentTime} WIB ({$status}).", $attendance);
+            return $this->successResponse($request, "Absensi Masuk berhasil dicatat pada {$currentTime} WIB ({$shiftLabel}).", $attendance);
         }
 
         if (! $attendance || ! $attendance->check_in_time) {

@@ -110,12 +110,12 @@
         <div class="admin-stat-box">
             <small>Hadir Hari Ini ({{ $today }})</small>
             <strong style="color:#065f46;">{{ $todayStats['present_today'] }}</strong>
-            <span>{{ $todayStats['on_time_today'] }} tepat waktu</span>
+            <span>{{ $todayStats['shift_pagi_today'] ?? 0 }} Shift Pagi • {{ $todayStats['shift_sore_today'] ?? 0 }} Shift Sore</span>
         </div>
         <div class="admin-stat-box">
-            <small>Terlambat Hari Ini</small>
-            <strong style="color:#b45309;">{{ $todayStats['late_today'] }}</strong>
-            <span>Check-in lewat 08:30 WIB</span>
+            <small>Skema Shift Aktif</small>
+            <strong style="color:#087bdc;">2 Shift</strong>
+            <span>Pagi (09:00) &amp; Sore (16:00) • Per Jam</span>
         </div>
         <div class="admin-stat-box">
             <small>Belum Absen Masuk</small>
@@ -186,8 +186,8 @@
                             <td style="font-family:var(--mono);font-weight:700;color:#087bdc;">{{ $item->check_out_time ?? '--:--' }}</td>
                             <td style="font-family:var(--mono);font-size:12px;">{{ $item->work_duration }}</td>
                             <td>
-                                <span class="admin-badge {{ strtolower($item->status) === 'terlambat' ? 'terlambat' : 'hadir' }}">
-                                    {{ $item->status }}
+                                <span class="admin-badge hadir">
+                                    {{ $item->status }} • {{ $item->shift_label }}
                                 </span>
                             </td>
                             <td>
