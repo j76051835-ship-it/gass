@@ -1053,16 +1053,20 @@
         .hcm-modal {
             position: fixed;
             inset: 0;
-            z-index: 100;
-            background: rgba(2, 6, 23, 0.76);
+            z-index: 9999;
+            background: rgba(2, 6, 23, 0.78);
             backdrop-filter: blur(4px);
-            display: grid;
-            place-items: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 18px;
+            overflow-y: auto;
         }
-        .hcm-modal[hidden] { display: none; }
+        .hcm-modal[hidden] { display: none !important; }
         .hcm-modal-dialog {
             width: min(100%, 540px);
+            max-height: calc(100dvh - 36px);
+            overflow-y: auto;
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 18px;
@@ -2313,8 +2317,8 @@
                 <h3 id="hcm-photo-modal-title">Bukti Foto Absensi</h3>
                 <button type="button" class="hcm-modal-close" data-close-photo aria-label="Tutup">×</button>
             </div>
-            <div class="hcm-camera-frame" style="background:#050814;">
-                <img id="hcm-photo-modal-img" src="" alt="Bukti Foto Absensi" style="object-fit:contain;">
+            <div class="hcm-camera-frame" style="background:#050814;min-height:240px;max-height:calc(100dvh - 185px);">
+                <img id="hcm-photo-modal-img" src="" alt="Bukti Foto Absensi" style="object-fit:contain;max-height:calc(100dvh - 185px);">
             </div>
             <div class="hcm-gps-bar">
                 <span>Waktu: <strong class="hcm-mono" id="hcm-photo-modal-time">-</strong></span>
@@ -3190,6 +3194,24 @@
         });
         document.querySelectorAll('[data-close-photo]').forEach((btn) => {
             btn.addEventListener('click', () => { photoModal.hidden = true; });
+        });
+
+        // Close any modal when clicking outside the card (backdrop) or pressing Escape
+        attendanceModal?.addEventListener('click', (e) => {
+            if (e.target === attendanceModal) closeAttendanceModal();
+        });
+        [mapModal, photoModal, sigModal, passwordModal].forEach((modal) => {
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) modal.hidden = true;
+            });
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (attendanceModal && !attendanceModal.hidden) closeAttendanceModal();
+                [mapModal, photoModal, sigModal, passwordModal].forEach((modal) => {
+                    if (modal) modal.hidden = true;
+                });
+            }
         });
     </script>
 </body>

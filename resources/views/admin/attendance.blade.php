@@ -57,12 +57,14 @@
 .admin-employee-list { display: grid; gap: 10px; margin-top: 18px; }
 .admin-employee-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 16px; border: 1px solid #cbd5e1; background: #f8fafc; }
 
-.admin-modal { position: fixed; inset: 0; z-index: 3000; background: rgba(5, 11, 24, .76); display: grid; place-items: center; padding: 20px; }
-.admin-modal[hidden] { display: none; }
-.admin-modal-card { width: min(100%, 620px); background: #fffdf8; color: #071a32; border: 1px solid #b8c4d3; padding: 22px; box-shadow: 10px 10px 0 #f7c934; }
-.admin-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #dde4ee; }
-.admin-modal-head h3 { margin: 0; font-size: 18px; }
-.admin-modal-close { border: 1px solid #071a32; background: #071a32; color: #fff; width: 32px; height: 32px; cursor: pointer; font-weight: 700; }
+.admin-page main { z-index: auto !important; }
+.admin-modal { position: fixed; inset: 0; z-index: 99999; background: rgba(5, 11, 24, .82); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; padding: 20px 16px; overflow-y: auto; }
+.admin-modal[hidden] { display: none !important; }
+.admin-modal-card { width: min(100%, 560px); max-height: calc(100dvh - 40px); display: flex; flex-direction: column; background: #fffdf8; color: #071a32; border: 1px solid #b8c4d3; padding: 18px 20px; box-shadow: 10px 10px 0 #f7c934; position: relative; overflow: hidden; }
+.admin-modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #dde4ee; flex-shrink: 0; }
+.admin-modal-head h3 { margin: 0; font-size: 16px; line-height: 1.3; }
+.admin-modal-close { border: 1px solid #071a32; background: #071a32; color: #fff; width: 34px; height: 34px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 18px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .15s ease, border-color .15s ease; }
+.admin-modal-close:hover { background: #dc2626; border-color: #dc2626; }
 
 @media (max-width: 860px) {
     .admin-workspace { padding: 32px 18px 65px; }
@@ -339,9 +341,9 @@
     <div class="admin-modal-card">
         <div class="admin-modal-head">
             <h3 id="admin-photo-title">Bukti Foto Selfie</h3>
-            <button type="button" class="admin-modal-close" data-admin-modal-close>×</button>
+            <button type="button" class="admin-modal-close" data-admin-modal-close aria-label="Tutup">×</button>
         </div>
-        <img id="admin-photo-img" src="" alt="Bukti Foto" style="width:100%;max-height:420px;object-fit:contain;background:#071a32;">
+        <img id="admin-photo-img" src="" alt="Bukti Foto" style="width:100%;max-height:calc(100dvh - 135px);object-fit:contain;background:#071a32;border-radius:4px;display:block;">
     </div>
 </div>
 @endsection
@@ -352,6 +354,21 @@
 document.addEventListener('DOMContentLoaded', function () {
     const mapModal = document.getElementById('admin-map-modal');
     const photoModal = document.getElementById('admin-photo-modal');
+    [mapModal, photoModal].forEach(function (modal) {
+        if (!modal) return;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.hidden = true;
+            }
+        });
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            if (mapModal) mapModal.hidden = true;
+            if (photoModal) photoModal.hidden = true;
+        }
+    });
     let adminMap = null;
     let adminMarkers = [];
 
