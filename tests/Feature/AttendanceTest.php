@@ -138,6 +138,19 @@ it('allows an admin to manage employee accounts and view attendance logs', funct
         ->assertSee('17:35:00')
         ->assertSee('9j 20m');
 
+    // Editing only division/position while keeping the same name and email must succeed
+    $this->actingAs($admin)
+        ->patch(route('admin.employees.update', $employee), [
+            'name' => 'Budi Santoso',
+            'email' => 'budi@gass.test',
+            'employee_id' => 'EMP-099',
+            'division' => 'Multimedia',
+            'position' => 'Lead Video Editor',
+        ])
+        ->assertRedirect()
+        ->assertSessionHasNoErrors()
+        ->assertSessionHas('status');
+
     $this->actingAs($admin)
         ->patch(route('admin.employees.update', $employee), [
             'name' => 'Budi Santoso Updated',
@@ -147,6 +160,7 @@ it('allows an admin to manage employee accounts and view attendance logs', funct
             'position' => 'Senior Editor',
         ])
         ->assertRedirect()
+        ->assertSessionHasNoErrors()
         ->assertSessionHas('status');
 
     $employee->refresh();

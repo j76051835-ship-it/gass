@@ -189,11 +189,19 @@ class AdminController extends Controller
             ? mb_strtolower($rawLogin)
             : preg_replace('/[^a-z0-9._-]/', '', mb_strtolower($rawLogin)).'@gass.local';
 
-        if (User::query()->whereRaw('LOWER(email) = ? OR LOWER(name) = ?', [$email, mb_strtolower($validated['name'])])->exists()) {
+        if (User::query()
+            ->where(function ($query) use ($email, $validated): void {
+                $query->whereRaw('LOWER(email) = ?', [$email])
+                    ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($validated['name'])]);
+            })
+            ->exists()) {
             return back()->withErrors(['email' => 'Username atau email karyawan tersebut sudah terdaftar.'])->withInput();
         }
 
         $nextNumber = User::query()->where('is_admin', false)->count() + 1;
+        while (User::query()->where('employee_id', sprintf('EMP-%03d', $nextNumber))->exists()) {
+            $nextNumber++;
+        }
 
         User::create([
             'name' => $validated['name'],
@@ -231,7 +239,10 @@ class AdminController extends Controller
 
         if (User::query()
             ->where('id', '!=', $employee->id)
-            ->whereRaw('LOWER(email) = ? OR LOWER(name) = ?', [$email, mb_strtolower($validated['name'])])
+            ->where(function ($query) use ($email, $validated): void {
+                $query->whereRaw('LOWER(email) = ?', [$email])
+                    ->orWhereRaw('LOWER(name) = ?', [mb_strtolower($validated['name'])]);
+            })
             ->exists()) {
             return back()->withErrors(['email' => 'Username atau email karyawan tersebut sudah digunakan akun lain.'])->withInput();
         }

@@ -54,6 +54,7 @@
 .admin-gps-btn:hover { background: #087bdc; color: #fff; }
 
 .admin-form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 16px; }
+.admin-edit-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .admin-employee-list { display: grid; gap: 10px; margin-top: 18px; }
 .admin-employee-item { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 14px 16px; border: 1px solid #cbd5e1; background: #f8fafc; }
 
@@ -729,7 +730,7 @@
         <form method="POST" id="admin-edit-emp-form" action="">
             @csrf
             @method('PATCH')
-            <div class="admin-form-grid" style="grid-template-columns:repeat(2, minmax(0, 1fr));">
+            <div class="admin-form-grid admin-edit-form-grid">
                 <label>
                     Username / Nama Karyawan *
                     <input type="text" name="name" id="admin-edit-name" required>
