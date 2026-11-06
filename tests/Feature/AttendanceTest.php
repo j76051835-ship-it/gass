@@ -137,6 +137,24 @@ it('allows an admin to manage employee accounts and view attendance logs', funct
         ->assertSee('08:15:20')
         ->assertSee('17:35:00')
         ->assertSee('9j 20m');
+
+    $this->actingAs($admin)
+        ->patch(route('admin.employees.update', $employee), [
+            'name' => 'Budi Santoso Updated',
+            'email' => 'budi.updated@gass.test',
+            'employee_id' => 'EMP-100',
+            'division' => 'IT & Digital',
+            'position' => 'Senior Editor',
+        ])
+        ->assertRedirect()
+        ->assertSessionHas('status');
+
+    $employee->refresh();
+    expect($employee->name)->toBe('Budi Santoso Updated')
+        ->and($employee->email)->toBe('budi.updated@gass.test')
+        ->and($employee->employee_id)->toBe('EMP-100')
+        ->and($employee->division)->toBe('IT & Digital')
+        ->and($employee->position)->toBe('Senior Editor');
 });
 
 it('allows an employee to update their profile, photo, digital signature, and password', function () {

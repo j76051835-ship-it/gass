@@ -13,7 +13,6 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -129,13 +128,36 @@ class AdminController extends Controller
             ->where('status', 'Terlambat')
             ->update(['status' => 'Hadir']);
 
-        $attendances = $query->limit(150)->get();
+        $attendances = $query->limit(300)->get();
         $todayAttendances = Attendance::query()->where('date', $today)->get();
         $shiftPagiToday = $todayAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Pagi')->count();
         $shiftSoreToday = $todayAttendances->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Sore')->count();
 
+        $employeeFolders = $employees->map(function (User $employee) use ($attendances, $todayAttendances): array {
+            $records = $attendances->where('user_id', $employee->id)->values();
+            $totalMinutes = $records->sum(fn (Attendance $item): int => $item->work_minutes);
+            $months = $records
+                ->groupBy(fn (Attendance $item): string => substr((string) $item->date, 0, 7))
+                ->map(fn ($items): int => $items->count())
+                ->all();
+
+            return [
+                'employee' => $employee,
+                'records' => $records,
+                'total_present' => $records->count(),
+                'shift_pagi' => $records->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Pagi')->count(),
+                'shift_sore' => $records->filter(fn (Attendance $item): bool => $item->shift_label === 'Shift Sore')->count(),
+                'total_minutes' => $totalMinutes,
+                'total_duration' => sprintf('%dj %dm', intdiv($totalMinutes, 60), $totalMinutes % 60),
+                'present_today' => $todayAttendances->contains('user_id', $employee->id),
+                'last_date' => $records->first()?->date,
+                'months' => $months,
+            ];
+        });
+
         return view('admin.attendance', [
             'employees' => $employees,
+            'employeeFolders' => $employeeFolders,
             'attendances' => $attendances,
             'today' => $today,
             'todayStats' => [
@@ -194,7 +216,7 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($employee->id)],
+            'email' => ['nullable', 'string', 'max:150'],
             'password' => ['nullable', 'string', 'min:6', 'max:100'],
             'employee_id' => ['nullable', 'string', 'max:50'],
             'division' => ['nullable', 'string', 'max:100'],
@@ -202,9 +224,21 @@ class AdminController extends Controller
             'supervisor' => ['nullable', 'string', 'max:120'],
         ]);
 
+        $rawLogin = trim(($validated['email'] ?? '') ?: $validated['name']);
+        $email = str_contains($rawLogin, '@')
+            ? mb_strtolower($rawLogin)
+            : preg_replace('/[^a-z0-9._-]/', '', mb_strtolower($rawLogin)).'@gass.local';
+
+        if (User::query()
+            ->where('id', '!=', $employee->id)
+            ->whereRaw('LOWER(email) = ? OR LOWER(name) = ?', [$email, mb_strtolower($validated['name'])])
+            ->exists()) {
+            return back()->withErrors(['email' => 'Username atau email karyawan tersebut sudah digunakan akun lain.'])->withInput();
+        }
+
         $updates = [
             'name' => $validated['name'],
-            'email' => $validated['email'],
+            'email' => $email,
             'employee_id' => ($validated['employee_id'] ?? null) ?: $employee->employee_id,
             'division' => ($validated['division'] ?? null) ?: $employee->division,
             'position' => ($validated['position'] ?? null) ?: $employee->position,
